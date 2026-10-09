@@ -1610,41 +1610,30 @@ LABEL_27:
   return result;
 }
 
-uint32 sub_80057BC0(uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 a9)
+uint32 sub_80057BC0(uint32 before, uint32 after, uint32 divisor, uint32 fraction, uint32 output)
 {
+    sint32 delta[3], product[3], quotient[3], denominator = (sint32)divisor;
+    uint32 i, result;
     FUNCTION_MARKER(0x80057BC0u, "SLES_007.30");
-    /* TODO: Resolve remaining signed wrapping, local aggregate layout and caller argument gaps during integration */
-
-  sint16 v13; 
-  sint32 v14; 
-  sint32 v15; 
-  sint32 v16; 
-  sint32 result; 
-
-  w_u32((uint32)(0x1F800028u), (sint16)sub_80046D0C(r_u16((uint32)(a2)) - r_u16((uint32)(a1))));
-  w_u16((uint32)(0x1F80002Cu), (sint16)sub_80046D0C(r_u16((uint32)(a2 + 2u * (1))) - r_u16((uint32)(a1 + 2u * (1)))));
-  v13 = sub_80046D0C(r_u16((uint32)(a2 + 2u * (2))) - r_u16((uint32)(a1 + 2u * (2))));
-  v14 = a4 * r_u32((uint32)(0x1F800028u));
-  v15 = a4 * r_u16((uint32)(0x1F80002Cu));
-  v16 = a4 * v13;
-  if ( !a3 )
-    abort(); /* TODO: Original BREAK exception requires an integration boundary */
-  if ( a3 == -1 && v14 == 0x80000000 )
-    abort(); /* TODO: Original BREAK exception requires an integration boundary */
-  if ( a3 == -1 && v15 == 0x80000000 )
-    abort(); /* TODO: Original BREAK exception requires an integration boundary */
-  if ( a3 == -1 && v16 == 0x80000000 )
-    abort(); /* TODO: Original BREAK exception requires an integration boundary */
-  w_u32((uint32)(0x1F800028u), v14 / a3);
-  w_u16((uint32)(0x1F80002Cu), v15 / a3);
-  w_u16((uint32)(0x1F800030u), v16 / a3);
-  w_u16((uint32)(a9 + 2u * (12)), -(sint16)(r_u16((uint32)(a1)) + v14 / a3) & 0xFFF);
-  w_u16((uint32)(a9 + 2u * (13)), (r_u16((uint32)(a1 + 2u * (1))) + r_u16((uint32)(0x1F80002Cu)) - 4096) & 0xFFF);
-  result = -((uint16)r_u16((uint32)(a1 + 2u * (2))) + r_u16((uint32)(0x1F800030u))) & 0xFFF;
-  w_u16((uint32)(a9 + 2u * (14)), result);
-  return result;
+    for (i = 0; i < 3u; ++i) {
+        delta[i] = (sint16)sub_80046D0C((uint32)(sint32)(sint16)(r_u16(after + 2u * i) - r_u16(before + 2u * i)));
+        if (i < 2u) w_u32(0x1F800028u + 4u * i, (uint32)delta[i]);
+    }
+    for (i = 0; i < 3u; ++i) {
+        product[i] = (sint32)(fraction * (uint32)delta[i]);
+        /* Preserve the original DIV exception guards */
+        if (!denominator || (denominator == -1 && product[i] == INT32_MIN)) abort();
+        quotient[i] = product[i] / denominator;
+    }
+    w_u32(0x1F800030u, (uint32)delta[2]);
+    for (i = 0; i < 3u; ++i) w_u32(0x1F800028u + 4u * i, (uint32)product[i]);
+    for (i = 0; i < 3u; ++i) w_u32(0x1F800028u + 4u * i, (uint32)quotient[i]);
+    w_u16(output + 24u, (0u - (r_u16(before) + (uint16)quotient[0])) & 0xFFFu);
+    w_u16(output + 26u, (r_u16(before + 2u) + (uint16)quotient[1] - 4096u) & 0xFFFu);
+    result = (0u - (r_u16(before + 4u) + (uint16)quotient[2])) & 0xFFFu;
+    w_u16(output + 28u, result);
+    return result;
 }
-
 uint32 sub_80014F0C(uint32 file,uint32 slot,uint32 maximum)
 {
     uint16 count,lookup[32],record[8];

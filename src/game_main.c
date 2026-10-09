@@ -776,7 +776,7 @@ uint32 sub_8004DBE4(void)
     FUNCTION_MARKER(0x8004DBE4u, "SLES_007.30");
     file = (uint8 *)file_storage;
     sub_8004DB50((const uint8 *)psx_addr(0x80010A00u, 1u), path);
-    while (CdSearchFilePSX(file, (const char *)path) == NULL)
+    while (CdSearchFile((CdlFILE *)file, (const char *)path) == NULL)
     {
     }
     entry_sector = sub_80063F88(file);
@@ -788,7 +788,7 @@ uint32 sub_8004DBE4(void)
     {
     }
     sub_8004DB50((const uint8 *)psx_addr(0x80010A0Cu, 1u), path);
-    while (CdSearchFilePSX(file, (const char *)path) == NULL)
+    while (CdSearchFile((CdlFILE *)file, (const char *)path) == NULL)
     {
     }
     result = sub_80063F88(file);

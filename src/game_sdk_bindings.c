@@ -168,7 +168,7 @@ uint32 sub_80063C94(uint32 command, uint32 parameter, uint32 result)
 }
 uint32 sub_80065768(uint32 result, uint32 filename)
 {
-    void *found = CdSearchFilePSX(sdk_pointer(result, 24u), sdk_pointer(filename, 1u));
+    CdlFILE *found = CdSearchFile(sdk_pointer(result, sizeof(CdlFILE)), sdk_pointer(filename, 1u));
     return found ? result : 0u;
 }
 uint32 sub_80067A6C(uint32 input, uint32 mode)

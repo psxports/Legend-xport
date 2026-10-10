@@ -36,7 +36,7 @@ sint32 legend_boot(void)
         xport_message_error("Legend", "Cannot load the original executable: ../orig/SLES_007.30");
         return 0;
     }
-    skip_movies = GetPrivateProfileIntA("Playback","SkipMovies",1,".\\Legend.ini") != 0;
+    skip_movies = GetPrivateProfileIntA("Playback","SkipMovies",0,".\\Legend.ini") != 0;
     /* The original bootstrap derives its BIOS heap from the loaded stack settings */
     w_u32(0x8006A0A8u, r_u32(0x80071480u) - 8u - r_u32(0x8007147Cu) - 0x000C9E50u);
     /* Original bootstrap calls InitHeap at the BSS end plus four bytes */

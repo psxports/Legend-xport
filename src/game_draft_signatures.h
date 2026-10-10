@@ -2,6 +2,10 @@
 #include "psx.h"
 #include "game_native_adapters.h"
 #include "game_cd.h"
+typedef uint32 (*LegendVideoCallback)(void);
+LegendVideoCallback sub_80067BA4(LegendVideoCallback callback);
+uint32 sub_80068318(uint32 table);
+uint32 sub_80066B08(uint32 mode, uint32 start, uint32 end, uint32 callback1, uint32 callback2);
 uint32 sub_8005D3C8(uint32 rotation, uint32 matrix);
 uint32 sub_8005D658(uint32 rotation, uint32 matrix);
 uint32 sub_8001A3BC(void);

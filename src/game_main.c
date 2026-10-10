@@ -57,8 +57,8 @@ void sub_80014E3C(void)
 uint32 sub_8005BFF8(void)
 {
     FUNCTION_MARKER(0x8005BFF8u, "SLES_007.30");
-    /* User-authorized unimplemented BIOS ExitCriticalSection boundary */
-    abort();
+    ExitCriticalSection();
+    return 0;
 }
 
 void sub_800117A4(uint32 address, uint32 size)
@@ -168,8 +168,7 @@ uint32 sub_8005BF08(uint32 mode)
 uint32 sub_8005BFE8(void)
 {
     FUNCTION_MARKER(0x8005BFE8u, "SLES_007.30");
-    /* User-authorized unimplemented BIOS EnterCriticalSection boundary */
-    abort();
+    return (uint32)EnterCriticalSectionPSX();
 }
 
 uint32 sub_8005C7D8(uint32 buffer0, uint32 size0, uint32 buffer1, uint32 size1)

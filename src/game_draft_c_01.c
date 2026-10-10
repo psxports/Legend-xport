@@ -7,7 +7,7 @@
 extern void draft_gte_control(uint32 index, uint32 value);
 extern uint32 sub_8003160C(uint32 index);
 extern uint32 sub_80021F28(void);
-extern uint32 sub_80067FC8(uint32 stream, uint32 data, uint32 length);
+extern uint32 sub_80067FC8(uint32 stream, uint32 data, uint32 table);
 extern uint32 sub_80066B98(uint32 stream);
 extern uint32 sub_80062128(void);
 extern uint32 sub_800621A8(uint32 mode, uint32 mask);
@@ -130,14 +130,14 @@ uint32 sub_80026D18(uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 a9, uint3
 
 uint32 sub_8005A614(uint32 a1)
 {
-    uint32 index, data, size;
+    uint32 index, data, table;
     if (a1)
     {
         w_u16(0x80071A8Eu, r_u16(0x80071A8Eu) ^ 1u);
         index = r_u16(0x80071A8Eu);
-        size = r_u32(0x80071538u);
+        table = r_u32(0x80071538u);
         data = r_u32(0x80071A94u + (uint32)((sint32)(index << 16) >> 14));
-        sub_80067FC8(a1, data, size);
+        sub_80067FC8(a1, data, table);
         return sub_80066B98(a1);
     }
     /* TODO: Null argument returns an unspecified incoming value */

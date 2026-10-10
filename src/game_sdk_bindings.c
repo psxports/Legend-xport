@@ -4,6 +4,8 @@
 #include "game_native_adapters.h"
 #include "game_cd.h"
 #include "game_timer.h"
+#include "game_draft_signatures.h"
+#include "psx_stream.h"
 extern uint32 legend_bios_card_info(uint32 channel);
 #include <stdio.h>
 #include <stdlib.h>
@@ -173,13 +175,13 @@ uint32 sub_80065768(uint32 result, uint32 filename)
 }
 uint32 sub_80067A6C(uint32 input, uint32 mode)
 {
-    (void)input; (void)mode;
-    return sdk_missing("DecDCTin / 80067A6C");
+    DecDCTin(sdk_pointer(input, 4u), (sint32)mode);
+    return 0u;
 }
 uint32 sub_80067AE8(uint32 output, uint32 words)
 {
-    (void)output; (void)words;
-    return sdk_missing("DecDCTout / 80067AE8");
+    DecDCTout(sdk_pointer(output, (words & ~31u) * 4u), (sint32)words);
+    return 0u;
 }
 
 uint32 sub_8005C0B8(uint32 counter, uint32 target, uint32 mode)
@@ -218,7 +220,11 @@ uint32 sub_8005E2F0(uint32 rectangle, uint32 pixels)
 uint32 sub_80060CC8(uint32 x, uint32 y) { return GetClut((sint32)x, (sint32)y); }
 uint32 sub_800623F8(uint32 address) { return SpuSetTransferStartAddr(address); }
 uint32 sub_80062488(uint32 mode) { return (uint32)SpuIsTransferCompleted((sint32)mode); }
-uint32 sub_80066888(uint32 mode) { return (uint32)CdRead2((sint32)mode); }
+uint32 sub_80066888(uint32 mode)
+{
+    stream_set_read_mode(mode);
+    return (uint32)CdRead2((sint32)mode);
+}
 uint32 sub_800678A8(uint32 destination, uint32 source, uint32 bytes)
 {
     memcpy(sdk_pointer(destination, bytes), sdk_pointer(source, bytes), bytes);
@@ -308,28 +314,64 @@ void sub_8005CAC8(uint32 far_distance,uint32 projection)
 
 uint32 sub_80068444() { return sdk_missing("DsDataCallback / 80068444"); }
 
-uint32 sub_80067BA4() { return sdk_missing("DecDCToutCallback / 80067BA4"); }
+static LegendVideoCallback video_output_callback;
+static void video_output_complete(void)
+{
+    if (video_output_callback) video_output_callback();
+}
+LegendVideoCallback sub_80067BA4(LegendVideoCallback callback)
+{
+    LegendVideoCallback previous = video_output_callback;
+    video_output_callback = callback;
+    DecDCToutCallback(callback ? video_output_complete : NULL);
+    return previous;
+}
 
-uint32 sub_80067FC8() { return sdk_missing("DecDCTvlc2 / 80067FC8"); }
+uint32 sub_80067FC8(uint32 stream, uint32 output, uint32 table)
+{
+    return (uint32)DecDCTvlc2(sdk_pointer(stream, 4u), sdk_pointer(output, 4u), sdk_pointer(table, sizeof(DECDCTTAB)));
+}
 
-uint32 sub_80066B98() { return sdk_missing("StFreeRing / 80066B98"); }
+uint32 sub_80066B98(uint32 stream) { return StFreeRing(sdk_pointer(stream, 4u)); }
 
-uint32 sub_80066D68() { return sdk_missing("StCdInterrupt / 80066D68"); }
+uint32 sub_80066D68(void) { StCdInterrupt(); return 0u; }
 
-uint32 sub_80067908() { return sdk_missing("DecDCTReset / 80067908"); }
+uint32 sub_80067908(uint32 mode) { DecDCTReset((sint32)mode); return 0u; }
 
-uint32 sub_80067F98() { return sdk_missing("DecDCTvlcSize2 / 80067F98"); }
+uint32 sub_80067F98(uint32 size) { return (uint32)DecDCTvlcSize2((sint32)size); }
 
-uint32 sub_80068318() { return sdk_missing("DecDCTvlcBuild / 80068318"); }
+uint32 sub_80068318(uint32 table) { DecDCTvlcBuild(sdk_pointer(table, sizeof(DECDCTTAB))); return 0u; }
 
-uint32 sub_800634A8() { return sdk_missing("StSetRing / 800634A8"); }
+uint32 sub_800634A8(uint32 ring, uint32 sectors)
+{
+    StSetRing(sdk_pointer(ring, (size_t)sectors * 2048u), sectors);
+    return 0u;
+}
 
-uint32 sub_80066B08() { return sdk_missing("StSetStream / 80066B08"); }
+static uint32 video_frame_callback, video_end_callback;
+extern void draft_guest_call_void(uint32 callback);
+static void video_frame_complete(void) { draft_guest_call_void(video_frame_callback); }
+static void video_stream_complete(void) { draft_guest_call_void(video_end_callback); }
+uint32 sub_80066B08(uint32 mode, uint32 start, uint32 end, uint32 callback1, uint32 callback2)
+{
+    video_frame_callback = callback1; video_end_callback = callback2;
+    StSetStream(mode, start, end, callback1 ? video_frame_complete : NULL, callback2 ? video_stream_complete : NULL);
+    return 0u;
+}
 
 uint32 draft_boundary_80066C88(uint32 *data, uint32 *header)
 {
-    (void)data; (void)header;
-    return sdk_missing("StGetNext / 80066C88");
+    uint32 *native_data, *native_header, result;
+    result = StGetNext(&native_data, &native_header);
+    if (!result) {
+        /* Both outputs remain inside the caller-owned guest ring */
+        if ((uint8 *)native_data < DRAM || (uint8 *)native_data >= DRAM + PSX_DRAM_SIZE
+            || (uint8 *)native_header < DRAM || (uint8 *)native_header >= DRAM + PSX_DRAM_SIZE)
+            return sdk_missing("STR output outside guest ring");
+        *data = 0x80000000u | (uint32)((uint8 *)native_data - DRAM);
+        *header = 0x80000000u | (uint32)((uint8 *)native_header - DRAM);
+    }
+    return result;
 }
 
 uint32 sub_8005C018(uint32 path, uint32 mode)

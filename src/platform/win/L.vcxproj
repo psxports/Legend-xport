@@ -84,4 +84,8 @@
 <ItemGroup><ClCompile Include="..\..\game_gameplay_landing_sound_a.c" /></ItemGroup>
 <ItemGroup><ClCompile Include="..\..\game_gameplay_attack_spawn_a.c" /></ItemGroup>
 <ItemGroup><ClCompile Include="..\..\game_gameplay_attack_spawn_c.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\..\..\xport\src\psx_mdec.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\..\..\xport\src\psx_press.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\..\..\xport\src\psx_vlc.c" /></ItemGroup>
+<ItemGroup><ClCompile Include="..\..\..\..\xport\src\psx_stream.c" /></ItemGroup>
 </Project>

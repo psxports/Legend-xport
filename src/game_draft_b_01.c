@@ -1,4 +1,5 @@
 #include "psx.h"
+#include "psx_stream.h"
 #include "xport.h"
 #include "game_draft_signatures.h"
 
@@ -232,7 +233,6 @@ extern uint32 sub_80032FD0(uint32 item);
 extern uint32 sub_8001B69C(void);
 extern uint32 sub_80068444(uint32 callback);
 extern uint32 sub_8006841C(uint32 callback);
-extern uint32 sub_80067BA4(uint32 mode);
 extern void sub_800CA294(uint32 first, uint32 second);
 
 uint32 sub_8001FCE8(uint32 a1, uint32 a2)
@@ -372,6 +372,8 @@ void sub_800470FC(void)
 
 uint32 sub_8005A3C8(void)
 {
+    /* Release native stream ownership before callbacks and buffers */
+    StUnSetRing();
     sub_80066998(); CdControlB(9u, NULL, NULL); sub_80067BA4(0u); sub_80013894();
     sub_80011AF8(r_u32(0x80071A94u)); sub_80011AF8(r_u32(0x80071A98u));
     sub_80011AF8(r_u32(0x80071A9Cu)); sub_80011AF8(r_u32(0x80071AA0u));
@@ -484,11 +486,8 @@ uint32 sub_8001B7A0(uint32 a1)
 
 void sub_80066998(void)
 {
-    sub_8005BFE8();
-    if (r_u32(0x800700CCu) == 1u) { sub_80068444(0u); sub_8006841C(0u); }
-    else { CdDataCallback(NULL); CdReadyCallbackPSX(0u); }
-    w_u8(r_u32(0x80070424u), 0u); w_u8(r_u32(0x80070430u), 0u);
-    sub_8005BFF8();
+    /* Native STR owns CD callbacks and controller cleanup */
+    StUnSetRing();
 }
 
 uint32 sub_8001A414(uint32 a1)

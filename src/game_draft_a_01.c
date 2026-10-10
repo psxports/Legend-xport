@@ -565,7 +565,7 @@ uint32 sub_8005A530(void)
     uint32 remaining = 0x800000u, data, header, frame;
     while (1)
     {
-        /* TODO: Missing SDK stream-buffer call uses ordinary local output arguments */
+        /* StGetNext writes the stream and header guest addresses */
         uint32 ready = draft_boundary_80066C88(&data, &header);
         --remaining;
         if (ready == 0u) break;

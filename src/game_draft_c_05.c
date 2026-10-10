@@ -7,15 +7,15 @@
 extern uint32 sub_80060CC8(uint32 x, uint32 y);
 extern uint32 sub_8005E290(uint32 rectangle, uint32 source);
 extern uint32 sub_8005DFE4(uint32 mode);
-extern uint32 sub_8005DC2C(uint32 environment, uint32 x, uint32 y, uint32 width);
+extern uint32 sub_8005DC2C(uint32 environment, uint32 x, uint32 y, uint32 width, uint32 height);
 extern uint32 sub_8005E814(uint32 environment);
 extern uint32 sub_800678A8(uint32 destination, uint32 source, uint32 size);
 extern uint32 sub_80067908(uint32 mode);
 extern uint32 sub_80067F98(uint32 mode);
-extern uint32 sub_80067BA4(uint32 (*callback)(void));
-extern uint32 sub_80068318(void);
+
+extern uint32 sub_80068318(uint32 table);
 extern uint32 sub_800634A8(uint32 buffer, uint32 size);
-extern uint32 sub_80066B08(uint32 mode, uint32 a, uint32 b, uint32 c);
+extern uint32 sub_80066B08(uint32 mode, uint32 start, uint32 end, uint32 callback1, uint32 callback2);
 extern uint32 sub_8005B278(uint32 frames);
 extern uint32 sub_8005CC48(uint32 matrix, uint32 input, uint32 output);
 extern uint32 sub_8005EEB8(uint32 packet, uint32 enabled, uint32 dither, uint32 page, uint32 window);
@@ -76,7 +76,7 @@ uint32 sub_8005A044(uint32 a1)
     w_u16(0x80071A5Cu, x); w_u16(0x80071A5Eu, y); w_u16(0x80071A60u, width); w_u16(0x80071A62u, height);
     w_u32(0x80071A64u, r_u32(a1 + 20u)); w_u16(0x80071A68u, r_u16(a1 + 28u)); w_u32(0x80071A6Cu, 0);
     for (i = 0; i < 5u; ++i) w_u16(0x80071A88u + 2u * i, 0);
-    sub_8005DC2C(0x80071AA4u, 0, 256, display_width); sub_8005DC2C(0x80071AB8u, 0, 0, display_width);
+    sub_8005DC2C(0x80071AA4u, 0, 256, (uint32)(sint32)(sint16)display_width, 256); sub_8005DC2C(0x80071AB8u, 0, 0, (uint32)(sint32)(sint16)display_width, 256);
     w_u16(0x80071AACu, 0); w_u16(0x80071AAEu, 18); w_u16(0x80071AB0u, 0); w_u16(0x80071AB2u, 256);
     w_u16(0x80071AC0u, 0); w_u16(0x80071AC2u, 18); w_u16(0x80071AC4u, 0); w_u16(0x80071AC6u, 256);
     w_u8(0x80071AC9u, (sint16)r_u16(a1 + 4u) == 1); w_u8(0x80071AB5u, r_u8(0x80071AC9u));
@@ -90,8 +90,8 @@ uint32 sub_8005A044(uint32 a1)
     w_u32(0x80071A9Cu, sub_80011A98(bytes)); w_u32(0x80071AA0u, sub_80011A98(bytes));
     sub_80067908(0); sub_80067F98(0); sub_80067BA4(sub_80059EE4);
     w_u32(0x80071534u, sub_80011A98(0x20000u)); w_u32(0x80071538u, sub_80011A98(69632));
-    sub_80068318(); sub_800634A8(r_u32(0x80071534u), 64);
-    return sub_80066B08(r_u16(0x80071A58u), 0, 0xFFFFFFFFu, 0);
+    sub_80068318(r_u32(0x80071538u)); sub_800634A8(r_u32(0x80071534u), 64);
+    return sub_80066B08((uint32)(sint32)(sint16)r_u16(0x80071A58u), 0, 0xFFFFFFFFu, 0, 0);
 }
 
 uint32 sub_80045EF4(uint32 a1, uint32 a2, uint32 a3)

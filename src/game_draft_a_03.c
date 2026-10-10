@@ -1375,102 +1375,56 @@ draft_gte_control(15u, gte_t6);
   return result;
 }
 
-uint32 sub_80059C50(uint32 a1)
+uint32 sub_80059C50(uint32 descriptor)
 {
     extern sint32 legend_skip_movies(void);
-    /* User-selected native playback policy skips before decoder allocation */
+    uint8 file[24];
+    uint32 file_address, frame, status = 0u, attempt = 0u;
     if (legend_skip_movies()) return 1u;
     FUNCTION_MARKER(0x80059C50u, "SLES_007.30");
-    /* TODO: Resolve remaining signed wrapping, local aggregate layout and caller argument gaps during integration */
-
-  sint16 v2; 
-  sint32 v3; 
-  uint8 v4; 
-  sint32 result; 
-  sint32 v6; 
-  sint16 v7; 
-  sint16 v8; 
-  uint16 v9; 
-  sint32 v10; 
-  sint32 v11; 
-  sint16 v12; 
-  sint8 v13[24]; 
-
-  v2 = 0;
-  v3 = 0;
-  v4 = sub_80065768(draft_local_address(v13, sizeof(v13)), r_u32((uint32)(a1))) == 0;
-  result = 3;
-  if ( !v4 )
-  {
-    sub_8005A044(a1);
-    if ( sub_8005A47C(draft_local_address(v13, sizeof(v13))) << 16 )
+    file_address = draft_local_address(file, sizeof(file));
+    if (!sub_80065768(file_address, r_u32(descriptor))) return 3u;
+    sub_8005A044(descriptor);
+    if (!(uint16)sub_8005A47C(file_address))
     {
-      while ( 1 )
-      {
-        v6 = sub_8005A530();
-        v7 = v2 + 1;
-        if ( v6 )
-          break;
-        ++v2;
-        if ( v7 == 5 )
-          goto LABEL_5;
-      }
-      sub_800451B8(256, 0, 0, 16);
-      sub_8005A614(v6);
-      v8 = 0;
-      if ( !r_u32((uint32)(0x80071A88u)) )
-      {
-        do
+        sub_8005A3C8(); return 3u;
+    }
+    do
+    {
+        frame = sub_8005A530();
+        if (frame) break;
+        ++attempt;
+    } while ((sint16)attempt != 5);
+    if (!frame) { sub_8005A3C8(); return 3u; }
+    sub_800451B8(256u, 0u, 0u, 16u);
+    sub_8005A614(frame);
+    attempt = 0u;
+    while (!r_u16(0x80071A88u) && !status)
+    {
+        uint32 mode = (uint16)sub_8005A7D8();
+        uint32 index = (uint32)(sint32)(sint16)r_u16(0x80071A8Eu);
+        uint32 words;
+        sub_80067A6C(r_u32(0x80071A94u + 4u * index), mode);
+        words = sub_8005A730();
+        index = (uint32)(sint32)(sint16)r_u16(0x80071A90u);
+        sub_80067AE8(r_u32(0x80071A9Cu + 4u * index), words);
+        frame = sub_8005A530();
+        if (frame) attempt = 0u;
+        else if ((sint16)++attempt == 5) status = 3u;
+        sub_8005A614(frame);
+        sub_80011BB8(); sub_80045048(0u);
+        if (r_u32(0x800718C8u))
         {
-          v9 = sub_8005A7D8();
-          sub_80067A6C(r_u32((uint32)(((r_u32((uint32)(0x80071A8Eu)) << 16 >> 14) - 2147018098 + 6))), v9);
-          v10 = sub_8005A730();
-          sub_80067AE8(r_u32((uint32)(((r_u32((uint32)(0x80071A90u)) << 16 >> 14) - 2147018084))), v10);
-          v11 = sub_8005A530();
-          v12 = v8 + 1;
-          if ( v11 )
-          {
-            v8 = 0;
-          }
-          else
-          {
-            ++v8;
-            if ( v12 == 5 )
-              v3 = 3;
-          }
-          sub_8005A614(v11);
-          sub_80011BB8();
-          sub_80045048(0);
-          if ( !r_u32((uint32)(0x800718C8u)) )
-            goto LABEL_16;
-          if ( !r_u16((uint32)(0x800716D8u)) && r_u16((uint32)(0x80071790u + 2u * (0))) )
-            w_u16((uint32)(0x800716D8u), -8);
-          if ( !r_u32((uint32)(0x800718C8u)) )
-          {
-LABEL_16:
-            if ( !r_u16((uint32)(0x800716D8u)) )
-              v3 = 1;
-          }
-          sub_8005A67C();
-          sub_8005DFE4(0);
-          sub_8005B278(2);
-          sub_8005E814(20 * r_u32((uint32)(0x80071A8Cu)) - 2147018076);
+            if (!r_u16(0x800716D8u) && r_u16(0x80071790u))
+                w_u16(0x800716D8u, 0xFFF8u);
         }
-        while ( !r_u32((uint32)(0x80071A88u)) && !v3 );
-      }
-      sub_8005A3C8();
-      result = v3;
-      if ( r_u32((uint32)(0x80071A88u)) )
-        return 1;
+        if (!r_u32(0x800718C8u) && !r_u16(0x800716D8u)) status = 1u;
+        sub_8005A67C(); sub_8005DFE4(0u); sub_8005B278(2u);
+        index = (uint32)(sint32)(sint16)r_u16(0x80071A8Cu);
+        sub_8005E814(0x80071AA4u + 20u * index);
     }
-    else
-    {
-LABEL_5:
-      sub_8005A3C8();
-      return 3;
-    }
-  }
-  return result;
+    sub_8005A3C8();
+    return r_u16(0x80071A88u) ? 1u : status;
 }
 
 uint32 sub_8002F0F8(void)

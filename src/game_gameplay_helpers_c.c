@@ -5,12 +5,17 @@
 uint32 sub_80022F08(uint32 position, uint32 velocity, uint32 size1, uint32 size2, uint32 type)
 {
     uint32 item = sub_80032EF0(), words[4], i;
-    if (!item) return 1;
+    if (!item)
+        return 1;
     w_u32(item + 8u, 1);
-    for (i = 0; i < 4u; ++i) words[i] = r_u32(position + 4u * i);
-    for (i = 0; i < 4u; ++i) w_u32(item + 12u + 4u * i, words[i]);
-    for (i = 0; i < 4u; ++i) words[i] = r_u32(velocity + 4u * i);
-    for (i = 0; i < 4u; ++i) w_u32(item + 28u + 4u * i, words[i]);
+    for (i = 0; i < 4u; ++i)
+        words[i] = r_u32(position + 4u * i);
+    for (i = 0; i < 4u; ++i)
+        w_u32(item + 12u + 4u * i, words[i]);
+    for (i = 0; i < 4u; ++i)
+        words[i] = r_u32(velocity + 4u * i);
+    for (i = 0; i < 4u; ++i)
+        w_u32(item + 28u + 4u * i, words[i]);
     w_u16(item + 48u, size1);
     w_u16(item + 50u, size2);
     w_u16(item + 46u, type);
@@ -35,12 +40,14 @@ uint32 sub_800598CC(uint32 actor)
     else
     {
         choice = (uint16)(count * (sub_80011B8C() & 127u)) / 127u;
-        if (choice >= count) choice = count - 1u;
+        if (choice >= count)
+            choice = count - 1u;
         result = choice;
         if (choice == r_u16(actor + 230u))
         {
             result = ++choice;
-            if (choice == count) choice = 0;
+            if (choice == count)
+                choice = 0;
         }
     }
     w_u16(actor + 230u, choice);

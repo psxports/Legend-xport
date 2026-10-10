@@ -28,14 +28,18 @@ void sub_80050134(void)
 {
     uint32 active = 0;
     sint32 frame;
-    if (r_u8(0x800AFFB0)) active = (r_u16(0x800AFFAA) & 3) != 0;
-    if (r_u8(0x800B00D0) && (r_u16(0x800B00CA) & 3)) active = 1;
-    if (!active) {
+    if (r_u8(0x800AFFB0))
+        active = (r_u16(0x800AFFAA) & 3) != 0;
+    if (r_u8(0x800B00D0) && (r_u16(0x800B00CA) & 3))
+        active = 1;
+    if (!active)
+    {
         w_u16(0x800718D4, 0);
         return;
     }
     frame = (sint16)r_u16(0x800718D4);
-    if (frame >= 31) return;
+    if (frame >= 31)
+        return;
     if (frame == 0 || frame == 15)
         sub_8004486C(1, 1, 2, 950, 24000, 512);
     if ((uint32)r_u16(0x800718D4) - 11 >= 4)

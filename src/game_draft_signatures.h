@@ -30,9 +30,9 @@ uint32 sub_80040E0C(uint32 actor, uint32 record, uint32 limit);
 uint32 sub_80040FD0(uint32 actor, uint32 record, uint32 index);
 uint32 sub_8003FDCC(uint32 actor, uint32 mesh);
 uint32 sub_80041160(uint32 actor);
-uint32 sub_8002A7AC(uint32 position,uint32 yaw,uint32 flags,uint32 source,uint32 owner,uint32 type);
-uint32 sub_8002ACAC(uint32 position,uint32 yaw,uint32 flags,uint32 source,uint32 owner,uint32 actor);
-uint32 sub_8002AD78(uint32 mesh,uint32 owner);
+uint32 sub_8002A7AC(uint32 position, uint32 yaw, uint32 flags, uint32 source, uint32 owner, uint32 type);
+uint32 sub_8002ACAC(uint32 position, uint32 yaw, uint32 flags, uint32 source, uint32 owner, uint32 actor);
+uint32 sub_8002AD78(uint32 mesh, uint32 owner);
 uint32 sub_8003F7F4(uint32 actor);
 uint32 sub_80040748(uint32 actor, uint32 mesh);
 uint32 sub_8003FCC4(uint32 mesh, uint32 actor, uint32 scale);
@@ -44,7 +44,6 @@ uint32 sub_8005D138(uint32 angles, uint32 matrix);
 uint32 sub_80051550(uint32 position, uint32 speed, uint32 angles);
 uint32 sub_80023E84(uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 id);
 uint32 sub_80023F10(uint32 image, uint32 slot, uint32 bone, uint32 xscale, uint32 yscale, uint32 zscale);
-#define psx_addr(address, size) legend_native_pointer((uint32)(address), (size))
 #define draft_gte_control xport_gte_write_control
 #define draft_gte_data xport_gte_write_data
 #define draft_gte_read xport_gte_read_data
@@ -325,7 +324,7 @@ uint32 sub_80030D84(void);
 uint32 sub_80030C38(uint32 a1, uint32 a2, uint32 a3);
 uint32 sub_80016738(uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 pageflags, uint32 shade);
 void sub_800470FC(void);
-uint32 sub_80046D2C(uint32 first,uint32 second);
+uint32 sub_80046D2C(uint32 first, uint32 second);
 uint32 sub_80047B68(void);
 uint32 sub_8003220C(void);
 void sub_8004EC74(void);
@@ -418,8 +417,9 @@ uint32 sub_8003F9B8(uint32 actor);
 uint32 sub_80024074(uint32 x, uint32 z, uint32 kind, uint32 strength, uint32 slot);
 uint32 sub_8005915C(uint32 actor, uint32 state);
 uint32 sub_800598CC(uint32 actor);
-uint32 sub_800599B4(uint32 actor);uint32 sub_80052FF0(uint32 actor,uint32 mask,uint32 latch_mask);
-uint32 sub_80052078(uint32 actor,uint32 cone,uint32 maximum_distance);
+uint32 sub_800599B4(uint32 actor);
+uint32 sub_80052FF0(uint32 actor, uint32 mask, uint32 latch_mask);
+uint32 sub_80052078(uint32 actor, uint32 cone, uint32 maximum_distance);
 uint32 sub_80054184(uint32 actor);
 uint32 sub_800524AC(uint32 actor);
 uint32 sub_800591A4(uint32 a1, uint32 a2);
@@ -452,8 +452,8 @@ uint32 sub_8005E2F0(uint32 rectangle, uint32 pixels);
 uint32 sub_8001C4B8(uint32 mesh);
 uint32 sub_8003133C(uint32 trail, uint32 position, uint32 shape, uint32 rotation);
 uint32 sub_800271A4(uint32 position, uint32 type, uint32 angle, uint32 color);
-uint32 sub_80022DD4(uint32 position,uint32 velocity,uint32 size,uint32 count,uint32 a5,uint32 a6,uint32 a7);
-uint32 sub_80022C40(uint32 a1,uint32 a2,uint32 a3,uint32 a4,uint32 a5,uint32 a6,uint32 a7,uint32 a8,uint32 a9);
+uint32 sub_80022DD4(uint32 position, uint32 velocity, uint32 size, uint32 count, uint32 a5, uint32 a6, uint32 a7);
+uint32 sub_80022C40(uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 a5, uint32 a6, uint32 a7, uint32 a8, uint32 a9);
 uint32 sub_80023DF0(uint32 position);
 uint32 sub_800322A4(uint32 record);
 uint32 sub_8003FC28(uint32 node);
@@ -464,14 +464,13 @@ uint32 sub_800409E8(void);
 uint32 sub_80040A50(uint32 mesh);
 uint32 sub_800411A0(uint32 actor, uint32 selected);
 void sub_8004148C(uint32 actor);
-uint32 sub_8002897C(uint32 position,uint32 kind);
+uint32 sub_8002897C(uint32 position, uint32 kind);
 uint32 sub_80040ABC(uint32 a1, uint32 a2, uint32 a3);
 uint32 sub_80040C7C(uint32 a1, uint32 a2, uint32 a3);
 uint32 sub_80030FE0(uint32 a1);
-uint32 sub_80029A18(uint32 model,uint32 owner);
-uint32 sub_8002A270(uint32 position,uint32 yaw,uint32 mode,uint32 variant,uint32 source_collider,uint32 owner,uint32 value,uint32 attach_mode);
-uint32 sub_8002AB88(uint32 position,uint32 yaw,uint32 kind,uint32 angle,uint32 a5,uint32 a6);
-
+uint32 sub_80029A18(uint32 model, uint32 owner);
+uint32 sub_8002A270(uint32 position, uint32 yaw, uint32 mode, uint32 variant, uint32 source_collider, uint32 owner, uint32 value, uint32 attach_mode);
+uint32 sub_8002AB88(uint32 position, uint32 yaw, uint32 kind, uint32 angle, uint32 a5, uint32 a6);
 
 uint32 sub_80038B08(uint32 node);
 
@@ -485,7 +484,7 @@ uint32 sub_80053A28(uint32 position, uint32 effect);
 
 uint32 sub_800539C0(uint32 actor, uint32 bone);
 
-uint32 sub_80028F48(uint32 model,uint32 x,uint32 y,uint32 z,uint32 yaw,uint32 speed,uint32 lifetime,uint32 source_collider,uint32 owner,uint32 param1,uint32 param2,uint32 collider_flags,uint32 source_mesh,uint32 param3,uint32 flags);
+uint32 sub_80028F48(uint32 model, uint32 x, uint32 y, uint32 z, uint32 yaw, uint32 speed, uint32 lifetime, uint32 source_collider, uint32 owner, uint32 param1, uint32 param2, uint32 collider_flags, uint32 source_mesh, uint32 param3, uint32 flags);
 uint32 sub_8002A00C(uint32 position, uint32 yaw, uint32 mode, uint32 variant, uint32 source_collider, uint32 owner, uint32 flags, uint32 collider_flags);
 
 uint32 sub_8003FA6C(void);

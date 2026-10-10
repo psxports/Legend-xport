@@ -199,4 +199,3 @@ uint32 sub_8001257C(const uint8 *occupied, uint32 required)
             return 0xFFFFu;
     }
 }
-

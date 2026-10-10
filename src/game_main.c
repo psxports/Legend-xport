@@ -175,10 +175,7 @@ uint32 sub_8005C7D8(uint32 buffer0, uint32 size0, uint32 buffer1, uint32 size1)
 {
     FUNCTION_MARKER(0x8005C7D8u, "SLES_007.30");
     /* User-authorized unimplemented BIOS InitPAD boundary */
-    (void)buffer0;
-    (void)size0;
-    (void)buffer1;
-    (void)size1;
+
     abort();
 }
 
@@ -279,8 +276,7 @@ uint32 sub_80045450(void)
         w_u32(table, 0u);
         ++count;
         table += 4u;
-    }
-    while (count < 80u);
+    } while (count < 80u);
     w_u16(0x80071734u, 0xFFFFu);
     return 0xFFFFFFFFu;
 }
@@ -358,8 +354,7 @@ uint32 sub_80014644(void)
     {
         w_u16(0x800BF5E0u + 2u * (uint16)index, (uint16)randPSX());
         ++index;
-    }
-    while ((uint16)index < 256u);
+    } while ((uint16)index < 256u);
     w_u16(0x8007198Cu, 0u);
     w_u16(0x800719FCu, (uint8)VSync(-1));
     w_u16(0x800719C8u, 1u);
@@ -376,8 +371,7 @@ uint32 sub_80014644(void)
     {
         VSync(0);
         ++index;
-    }
-    while ((uint16)index < 50u);
+    } while ((uint16)index < 50u);
     sub_80014328();
     sub_800142CC();
     sub_80014378();
@@ -418,8 +412,7 @@ uint32 sub_80064008(void)
             break;
         response[length] = r_u8(r_u32(0x80070374u));
         ++length;
-    }
-    while ((sint32)length < 8);
+    } while ((sint32)length < 8);
     index = length;
     if ((sint32)index < 8)
     {
@@ -427,8 +420,7 @@ uint32 sub_80064008(void)
         {
             response[index] = 0u;
             ++index;
-        }
-        while ((sint32)index < 8);
+        } while ((sint32)index < 8);
     }
     w_u8(r_u32(0x80070370u), 1u);
     w_u8(r_u32(0x8007037Cu), 7u);
@@ -450,50 +442,31 @@ uint32 sub_80064008(void)
             status_code = r_u32(0x800700B8u);
             error_code = r_u32(0x800700BCu);
             command_name = r_u32(0x800700D0u + 4u * command);
-            printf((const char *)psx_addr(0x80011408u, 1u),
-                (const char *)psx_addr(command_name, 1u), status_code, error_code);
+            printf((const char *)psx_addr(0x80011408u, 1u), (const char *)psx_addr(command_name, 1u), status_code, error_code);
         }
     }
     switch (interrupt)
     {
-    case 1u:
-        if (status != 0u && length == 1u)
-            status = 0u;
-        w_u8(0x80070389u, status != 0u ? 5u : 1u);
-        destination = 0x80071C94u;
-        if (destination != 0u)
-        {
-            index = 7u;
-            do
+        case 1u:
+            if (status != 0u && length == 1u)
+                status = 0u;
+            w_u8(0x80070389u, status != 0u ? 5u : 1u);
+            destination = 0x80071C94u;
+            if (destination != 0u)
             {
-                w_u8(destination++, response[7u - index]);
-                --index;
+                index = 7u;
+                do
+                {
+                    w_u8(destination++, response[7u - index]);
+                    --index;
+                } while (index != 0xFFFFFFFFu);
             }
-            while (index != 0xFFFFFFFFu);
-        }
-        w_u8(r_u32(0x80070370u), 0u);
-        w_u8(r_u32(0x8007037Cu), 0u);
-        result = 4u;
-        break;
-    case 2u:
-        w_u8(0x80070388u, status != 0u ? 5u : 2u);
-        destination = 0x80071C8Cu;
-        if (destination != 0u)
-        {
-            index = 7u;
-            do
-            {
-                w_u8(destination++, response[7u - index]);
-                --index;
-            }
-            while (index != 0xFFFFFFFFu);
-        }
-        result = 2u;
-        break;
-    case 3u:
-        if (status != 0u)
-        {
-            w_u8(0x80070388u, 5u);
+            w_u8(r_u32(0x80070370u), 0u);
+            w_u8(r_u32(0x8007037Cu), 0u);
+            result = 4u;
+            break;
+        case 2u:
+            w_u8(0x80070388u, status != 0u ? 5u : 2u);
             destination = 0x80071C8Cu;
             if (destination != 0u)
             {
@@ -502,15 +475,61 @@ uint32 sub_80064008(void)
                 {
                     w_u8(destination++, response[7u - index]);
                     --index;
-                }
-                while (index != 0xFFFFFFFFu);
+                } while (index != 0xFFFFFFFFu);
             }
             result = 2u;
-        }
-        else if (r_u32(0x80070170u + 4u * r_u8(0x800700C9u)) != 0u)
-        {
-            w_u8(0x80070388u, 3u);
-            destination = 0x80071C8Cu;
+            break;
+        case 3u:
+            if (status != 0u)
+            {
+                w_u8(0x80070388u, 5u);
+                destination = 0x80071C8Cu;
+                if (destination != 0u)
+                {
+                    index = 7u;
+                    do
+                    {
+                        w_u8(destination++, response[7u - index]);
+                        --index;
+                    } while (index != 0xFFFFFFFFu);
+                }
+                result = 2u;
+            }
+            else if (r_u32(0x80070170u + 4u * r_u8(0x800700C9u)) != 0u)
+            {
+                w_u8(0x80070388u, 3u);
+                destination = 0x80071C8Cu;
+                if (destination != 0u)
+                {
+                    index = 7u;
+                    do
+                    {
+                        w_u8(destination++, response[7u - index]);
+                        --index;
+                    } while (index != 0xFFFFFFFFu);
+                }
+                result = 1u;
+            }
+            else
+            {
+                w_u8(0x80070388u, 2u);
+                destination = 0x80071C8Cu;
+                if (destination != 0u)
+                {
+                    index = 7u;
+                    do
+                    {
+                        w_u8(destination++, response[7u - index]);
+                        --index;
+                    } while (index != 0xFFFFFFFFu);
+                }
+                result = 2u;
+            }
+            break;
+        case 4u:
+            destination = 0x80071C9Cu;
+            w_u8(0x8007038Au, 4u);
+            w_u8(0x80070389u, r_u8(0x8007038Au));
             if (destination != 0u)
             {
                 index = 7u;
@@ -518,15 +537,9 @@ uint32 sub_80064008(void)
                 {
                     w_u8(destination++, response[7u - index]);
                     --index;
-                }
-                while (index != 0xFFFFFFFFu);
+                } while (index != 0xFFFFFFFFu);
             }
-            result = 1u;
-        }
-        else
-        {
-            w_u8(0x80070388u, 2u);
-            destination = 0x80071C8Cu;
+            destination = 0x80071C94u;
             if (destination != 0u)
             {
                 index = 7u;
@@ -534,71 +547,40 @@ uint32 sub_80064008(void)
                 {
                     w_u8(destination++, response[7u - index]);
                     --index;
-                }
-                while (index != 0xFFFFFFFFu);
+                } while (index != 0xFFFFFFFFu);
             }
-            result = 2u;
-        }
-        break;
-    case 4u:
-        destination = 0x80071C9Cu;
-        w_u8(0x8007038Au, 4u);
-        w_u8(0x80070389u, r_u8(0x8007038Au));
-        if (destination != 0u)
-        {
-            index = 7u;
-            do
+            result = 4u;
+            break;
+        case 5u:
+            destination = 0x80071C8Cu;
+            w_u8(0x80070389u, 5u);
+            w_u8(0x80070388u, r_u8(0x80070389u));
+            if (destination != 0u)
             {
-                w_u8(destination++, response[7u - index]);
-                --index;
+                index = 7u;
+                do
+                {
+                    w_u8(destination++, response[7u - index]);
+                    --index;
+                } while (index != 0xFFFFFFFFu);
             }
-            while (index != 0xFFFFFFFFu);
-        }
-        destination = 0x80071C94u;
-        if (destination != 0u)
-        {
-            index = 7u;
-            do
+            destination = 0x80071C94u;
+            if (destination != 0u)
             {
-                w_u8(destination++, response[7u - index]);
-                --index;
+                index = 7u;
+                do
+                {
+                    w_u8(destination++, response[7u - index]);
+                    --index;
+                } while (index != 0xFFFFFFFFu);
             }
-            while (index != 0xFFFFFFFFu);
-        }
-        result = 4u;
-        break;
-    case 5u:
-        destination = 0x80071C8Cu;
-        w_u8(0x80070389u, 5u);
-        w_u8(0x80070388u, r_u8(0x80070389u));
-        if (destination != 0u)
-        {
-            index = 7u;
-            do
-            {
-                w_u8(destination++, response[7u - index]);
-                --index;
-            }
-            while (index != 0xFFFFFFFFu);
-        }
-        destination = 0x80071C94u;
-        if (destination != 0u)
-        {
-            index = 7u;
-            do
-            {
-                w_u8(destination++, response[7u - index]);
-                --index;
-            }
-            while (index != 0xFFFFFFFFu);
-        }
-        result = 6u;
-        break;
-    default:
-        puts((const char *)psx_addr(0x80011424u, 1u));
-        printf((const char *)psx_addr(0x80011438u, 1u), interrupt);
-        result = 0u;
-        break;
+            result = 6u;
+            break;
+        default:
+            puts((const char *)psx_addr(0x80011424u, 1u));
+            printf((const char *)psx_addr(0x80011438u, 1u), interrupt);
+            result = 0u;
+            break;
     }
     return result;
 }
@@ -625,8 +607,7 @@ uint32 sub_80013ECC(void)
             CdIntToPos((sint32)(result + 26u), (CdlLOC *)psx_addr(address, sizeof(CdlLOC)));
             ++index;
             result = (sint32)(uint16)index < (sint32)(sint16)r_u16(0x80071610u);
-        }
-        while (result != 0u);
+        } while (result != 0u);
     }
     w_u8(0x80071540u, 0u);
     return result;
@@ -707,15 +688,13 @@ uint32 sub_80018C78(void)
         w_u32(address, 0u);
         w_u32(address + 4u, 0u);
         w_u32(address + 12u, 0u);
-    }
-    while ((uint16)index < 512u);
+    } while ((uint16)index < 512u);
     index = 0u;
     do
     {
         w_u32(0x80071570u + 4u * (uint16)index, 0u);
         ++index;
-    }
-    while ((uint16)index < 2u);
+    } while ((uint16)index < 2u);
     return 0u;
 }
 
@@ -728,8 +707,7 @@ uint32 sub_800573B0(void)
     {
         w_u32(0x800BFD08u + 40u * (uint16)index, 0u);
         ++index;
-    }
-    while ((uint16)index < 32u);
+    } while ((uint16)index < 32u);
     return 0u;
 }
 
@@ -752,16 +730,14 @@ uint32 sub_8001455C(void)
             value = r_u8(name + (uint16)byte_index);
             w_u8(address + (uint16)byte_index, (uint8)value);
             ++byte_index;
-        }
-        while ((uint16)byte_index < 6u);
+        } while ((uint16)byte_index < 6u);
         address = 12u * (uint16)index;
         value = r_u32(0x80068500u + 4u * (uint16)index);
         w_u8(0x800AF6F1u + address, (uint8)(20u - index));
         w_u32(0x800AF6F8u + address, value);
         w_u8(0x800AF6F0u + address, (uint8)((uint16)index % 3u));
         ++index;
-    }
-    while ((uint16)index < 10u);
+    } while ((uint16)index < 10u);
     return 0u;
 }
 
@@ -811,8 +787,7 @@ uint8 *sub_8004DB50(const uint8 *name, uint8 *path)
             path[(uint16)write_index] = name[(uint16)read_index];
             ++read_index;
             ++write_index;
-        }
-        while (name[(uint16)read_index] != 0u);
+        } while (name[(uint16)read_index] != 0u);
     }
     path[(uint16)write_index] = 59u;
     path[(uint16)(write_index + 1u)] = 49u;

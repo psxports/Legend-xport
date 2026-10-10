@@ -9,8 +9,10 @@ uint32 sub_8004E570(uint32 kind)
     w_u32(0x80071680, packet + 40);
     w_u8(packet + 3, 8);
     w_u8(packet + 7, 0x38);
-    if (kind <= 2) {
-        for (i = 0; i < 3; ++i) {
+    if (kind <= 2)
+    {
+        for (i = 0; i < 3; ++i)
+        {
             w_u8(packet + 4 + 8 * i, kind == 1 ? 255 : 0);
             w_u8(packet + 5 + 8 * i, kind == 0 ? 255 : 0);
             w_u8(packet + 6 + 8 * i, kind == 2 ? 255 : 0);

@@ -5,7 +5,8 @@
 uint32 sub_8002837C(uint32 position, uint32 image, uint32 angle, uint32 renderer, uint32 speed, uint32 lifetime)
 {
     uint32 item = sub_80032EF0(), mesh, words[4], i;
-    if (!item) return 22;
+    if (!item)
+        return 22;
     w_u32(item + 8, 22);
     mesh = sub_8001A3BC();
     sub_8001A2FC((uint16)image, mesh);
@@ -16,8 +17,10 @@ uint32 sub_8002837C(uint32 position, uint32 image, uint32 angle, uint32 renderer
     w_u16(mesh + 24, 0);
     w_u16(mesh + 28, 0);
     w_u16(mesh + 26, 0);
-    for (i = 0; i < 4; ++i) words[i] = r_u32(position + 4 * i);
-    for (i = 0; i < 4; ++i) w_u32(mesh + 8 + 4 * i, words[i]);
+    for (i = 0; i < 4; ++i)
+        words[i] = r_u32(position + 4 * i);
+    for (i = 0; i < 4; ++i)
+        w_u32(mesh + 8 + 4 * i, words[i]);
     w_u16(item + 28, 0xFFFF);
     w_u32(item + 12, mesh);
     w_u16(item + 30, angle);
@@ -30,7 +33,8 @@ uint32 sub_8002837C(uint32 position, uint32 image, uint32 angle, uint32 renderer
 uint32 sub_800326FC(void)
 {
     uint32 i;
-    for (i = 0; i < 3; ++i) {
+    for (i = 0; i < 3; ++i)
+    {
         uint32 channel = (uint16)sub_800448F4();
         uint32 pitch = (uint16)((sub_80011B8C() & 255) + 2500);
         uint32 volume = (uint16)sub_80044F58(16000);
@@ -42,7 +46,8 @@ uint32 sub_800326FC(void)
 uint32 sub_800233BC(uint32 position, uint32 target, uint32 model, uint32 count)
 {
     uint32 item = sub_80032F70(), mesh, words[4], i;
-    if (!item) return 6;
+    if (!item)
+        return 6;
     w_u32(item + 8, 6);
     mesh = sub_8001A3BC();
     w_u32(item + 12, mesh);
@@ -54,13 +59,17 @@ uint32 sub_800233BC(uint32 position, uint32 target, uint32 model, uint32 count)
     w_u16(item + 114, model);
     w_u16(item + 20, 100);
     w_u16(item + 22, 0);
-    for (i = 0; i < 4; ++i) words[i] = r_u32(position + 4 * i);
-    for (i = 0; i < 4; ++i) w_u32(mesh + 8 + 4 * i, words[i]);
+    for (i = 0; i < 4; ++i)
+        words[i] = r_u32(position + 4 * i);
+    for (i = 0; i < 4; ++i)
+        w_u32(mesh + 8 + 4 * i, words[i]);
     w_u16(mesh + 24, 0);
     w_u16(mesh + 28, 0);
     w_u16(mesh + 26, 0);
-    for (i = 0; i < 4; ++i) words[i] = r_u32(target + 4 * i);
-    for (i = 0; i < 4; ++i) w_u32(item + 96 + 4 * i, words[i]);
+    for (i = 0; i < 4; ++i)
+        words[i] = r_u32(target + 4 * i);
+    for (i = 0; i < 4; ++i)
+        w_u32(item + 96 + 4 * i, words[i]);
     w_u16(item + 116, count);
     return words[0];
 }
@@ -80,11 +89,15 @@ uint32 sub_80015F54(uint32 position, uint32 texture, uint32 width, uint32 height
     w_u32(0x1F800028, r_u32(position) - r_u32(0x800BBFC4));
     w_u32(0x1F80002C, r_u32(position + 4) - r_u32(0x800BBFC8));
     sub_8005CC48(0x800BBFDC, 0x1F800028, 0x1F800028);
-    if (r_u32(0x1F800030) > 39999) return 0;
-    if (r_u32(0x1F800028) + 20000 > 40000) return 0;
-    if (r_u32(0x1F80002C) + 20000 > 40000) return 0;
+    if (r_u32(0x1F800030) > 39999)
+        return 0;
+    if (r_u32(0x1F800028) + 20000 > 40000)
+        return 0;
+    if (r_u32(0x1F80002C) + 20000 > 40000)
+        return 0;
     w_u32(0x1F800030, r_u32(0x1F800030) - (uint32)(sint32)(sint16)depth_bias);
-    if ((sint32)r_u32(0x1F800030) < 32) w_u32(0x1F800030, 32);
+    if ((sint32)r_u32(0x1F800030) < 32)
+        w_u32(0x1F800030, 32);
     descriptor = 0x800C0564 + 16 * (uint16)texture;
     draft_gte_control(1, 0);
     draft_gte_control(3, 0);
@@ -128,7 +141,8 @@ uint32 sub_80015F54(uint32 position, uint32 texture, uint32 width, uint32 height
     w_u8(packet + 37, r_u8(descriptor + 6) + r_u8(descriptor + 10) - 1);
     w_u32(packet + 24, depth);
     depth = (uint32)((sint32)r_u32(0x1F800030) >> 4);
-    if (depth - 1 < 2499) {
+    if (depth - 1 < 2499)
+    {
         ot = r_u32(0x8007184C) + 4 * depth;
         w_u32(packet, (r_u32(packet) & 0xFF000000) | (r_u32(ot) & 0xFFFFFF));
         w_u32(ot, (r_u32(ot) & 0xFF000000) | (packet & 0xFFFFFF));

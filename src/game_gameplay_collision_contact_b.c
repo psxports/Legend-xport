@@ -37,8 +37,10 @@ uint32 sub_80047224(uint32 collision)
                     w_u32(0x1F800028u + 4u * axis, value);
                     high = value + radius;
                     low = value - radius;
-                    if ((sint32)maximum[axis] < (sint32)high) maximum[axis] = high;
-                    if ((sint32)low < (sint32)minimum[axis]) minimum[axis] = low;
+                    if ((sint32)maximum[axis] < (sint32)high)
+                        maximum[axis] = high;
+                    if ((sint32)low < (sint32)minimum[axis])
+                        minimum[axis] = low;
                 }
                 /* The original copies the fourth scratch word without modifying it */
                 for (axis = 0u; axis < 4u; ++axis)
@@ -46,8 +48,7 @@ uint32 sub_80047224(uint32 collision)
                 vertex = (vertex + 1u) & 65535u;
             }
             part = (part + 1u) & 65535u;
-        }
-        while ((sint32)part < (sint32)r_u32(collision + 20u));
+        } while ((sint32)part < (sint32)r_u32(collision + 20u));
     }
     for (axis = 0u; axis < 3u; ++axis)
     {

@@ -27,8 +27,7 @@ uint32 sub_8004DA84(uint8 *position, uint32 destination, uint32 sectors)
             destination += 2048u;
             remaining = sectors;
             --sectors;
-        }
-        while (remaining != 0u);
+        } while (remaining != 0u);
     }
     CdControl(9u, NULL, NULL);
     return 1u;
@@ -80,33 +79,33 @@ uint32 sub_800134E0(uint32 image, uint32 index, sint32 mode)
         rectangle.y = (sint16)y;
         switch (format)
         {
-        case 0u:
-            pixels = data + 2u * offset;
-            offset += 0x4000u;
-            rectangle.w = 64;
-            break;
-        case 1u:
-            pixels = data + 2u * offset;
-            offset += 0x8000u;
-            rectangle.w = 128;
-            break;
-        case 2u:
-            pixels = data + 2u * offset;
-            offset += 0x10000u;
-            rectangle.w = 256;
-            if (((uint32)mode & 0xFFFFu) == 0u)
-            {
-                cursor = pixels;
-                for (count = 0u; count < 0x10000u; ++count)
+            case 0u:
+                pixels = data + 2u * offset;
+                offset += 0x4000u;
+                rectangle.w = 64;
+                break;
+            case 1u:
+                pixels = data + 2u * offset;
+                offset += 0x8000u;
+                rectangle.w = 128;
+                break;
+            case 2u:
+                pixels = data + 2u * offset;
+                offset += 0x10000u;
+                rectangle.w = 256;
+                if (((uint32)mode & 0xFFFFu) == 0u)
                 {
-                    w_u16(cursor, r_u16(cursor) | 0x8000u);
-                    cursor += 2u;
+                    cursor = pixels;
+                    for (count = 0u; count < 0x10000u; ++count)
+                    {
+                        w_u16(cursor, r_u16(cursor) | 0x8000u);
+                        cursor += 2u;
+                    }
                 }
-            }
-            break;
-        default:
-            /* TODO: Original default retains undefined pixel address and rectangle width */
-            abort();
+                break;
+            default:
+                /* TODO: Original default retains undefined pixel address and rectangle width */
+                abort();
         }
         LoadImagePSX(&rectangle, (uint32 *)psx_addr(pixels, 1u));
         DrawSync(0);
@@ -132,30 +131,30 @@ uint32 sub_800134E0(uint32 image, uint32 index, sint32 mode)
         rectangle.y = (sint16)y;
         switch (format)
         {
-        case 0u:
-            pixels = data + 2u * offset;
-            rectangle.w = 16;
-            break;
-        case 1u:
-            pixels = data + 2u * offset;
-            rectangle.w = 32;
-            break;
-        case 2u:
-            pixels = data + 2u * offset;
-            rectangle.w = 64;
-            if (((uint32)mode & 0xFFFFu) == 0u)
-            {
-                cursor = pixels;
-                for (count = 0u; count < 0x4000u; ++count)
+            case 0u:
+                pixels = data + 2u * offset;
+                rectangle.w = 16;
+                break;
+            case 1u:
+                pixels = data + 2u * offset;
+                rectangle.w = 32;
+                break;
+            case 2u:
+                pixels = data + 2u * offset;
+                rectangle.w = 64;
+                if (((uint32)mode & 0xFFFFu) == 0u)
                 {
-                    w_u16(cursor, r_u16(cursor) | 0x8000u);
-                    cursor += 2u;
+                    cursor = pixels;
+                    for (count = 0u; count < 0x4000u; ++count)
+                    {
+                        w_u16(cursor, r_u16(cursor) | 0x8000u);
+                        cursor += 2u;
+                    }
                 }
-            }
-            break;
-        default:
-            /* TODO: Original default retains prior pixel address and rectangle width */
-            abort();
+                break;
+            default:
+                /* TODO: Original default retains prior pixel address and rectangle width */
+                abort();
         }
         LoadImagePSX(&rectangle, (uint32 *)psx_addr(pixels, 1u));
         DrawSync(0);

@@ -15,7 +15,8 @@ uint32 sub_8002BB88(uint32 color, uint32 first, uint32 second, uint32 third)
     for (slot = 0u; slot < 4u; ++slot)
     {
         entry = 0x800BD3A8u + 24u * slot;
-        if (!r_u16(entry + 22u)) continue;
+        if (!r_u16(entry + 22u))
+            continue;
         squared = 0u;
         for (axis = 0u; axis < 3u; ++axis)
         {
@@ -24,12 +25,14 @@ uint32 sub_8002BB88(uint32 color, uint32 first, uint32 second, uint32 third)
             squared += delta * delta;
         }
         distance = sub_8005CBB8(squared);
-        if ((sint32)distance >= 256) continue;
+        if ((sint32)distance >= 256)
+            continue;
         factor = 256u - distance;
         for (axis = 0u; axis < 3u; ++axis)
         {
             product = r_u16(entry + 16u + 2u * axis) * factor;
-            if ((sint32)product < 0) product += 255u;
+            if ((sint32)product < 0)
+                product += 255u;
             channels[axis] += (uint32)((sint32)product >> 8);
         }
     }

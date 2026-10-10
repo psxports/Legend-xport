@@ -11,8 +11,8 @@ static void flash_vertex(uint32 vertices, uint32 index, uint32 slot)
 
 uint32 sub_8001A7A8(uint32 mesh, uint32 red, uint32 green, uint32 blue)
 {
-    static const uint8 strides[8] = {12,16,20,28,24,28,24,28};
-    static const uint8 indices[8] = {4,4,12,16,16,16,16,16};
+    static const uint8 strides[8] = {12, 16, 20, 28, 24, 28, 24, 28};
+    static const uint8 indices[8] = {4, 4, 12, 16, 16, 16, 16, 16};
     uint32 packet = r_u32(0x80071680u), ot = r_u32(0x8007184Cu);
     uint32 model, result, depth, radius, axis, column, stream, vertices, kind, count, i, quad, bucket;
     do
@@ -25,7 +25,8 @@ uint32 sub_8001A7A8(uint32 mesh, uint32 red, uint32 green, uint32 blue)
         result = sub_8001A59C(mesh);
         if (model)
         {
-            depth = r_u32(mesh + 72u); radius = r_u32(model + 16u);
+            depth = r_u32(mesh + 72u);
+            radius = r_u32(model + 16u);
             result = depth - radius;
             if ((sint32)(depth + radius) >= 64)
             {
@@ -56,12 +57,15 @@ uint32 sub_8001A7A8(uint32 mesh, uint32 red, uint32 green, uint32 blue)
                             }
                             for (axis = 0u; axis < 3u; ++axis)
                                 draft_gte_control(5u + axis, r_u32(mesh + 64u + 4u * axis));
-                            stream = r_u32(model + 12u); vertices = r_u32(model);
+                            stream = r_u32(model + 12u);
+                            vertices = r_u32(model);
                             for (kind = 0u; kind < 8u; ++kind)
                             {
                                 result = kind;
-                                if (r_u16(stream) != kind) continue;
-                                count = r_u16(stream + 2u); stream += 4u;
+                                if (r_u16(stream) != kind)
+                                    continue;
+                                count = r_u16(stream + 2u);
+                                stream += 4u;
                                 for (i = 0u; i < count; ++i)
                                 {
                                     quad = kind & 1u;
@@ -70,7 +74,9 @@ uint32 sub_8001A7A8(uint32 mesh, uint32 red, uint32 green, uint32 blue)
                                     draft_gte_command(0x280030u);
                                     w_u8(packet + 3u, quad ? 5u : 4u);
                                     w_u8(packet + 7u, quad ? 40u : 32u);
-                                    w_u8(packet + 4u, red); w_u8(packet + 5u, green); w_u8(packet + 6u, blue);
+                                    w_u8(packet + 4u, red);
+                                    w_u8(packet + 5u, green);
+                                    w_u8(packet + 6u, blue);
                                     draft_gte_command(0x1400006u);
                                     if ((sint32)draft_gte_read(24u) > 0)
                                     {
@@ -88,13 +94,15 @@ uint32 sub_8001A7A8(uint32 mesh, uint32 red, uint32 green, uint32 blue)
                                             bucket = ot + 4u * depth;
                                             w_u32(packet, (r_u32(packet) & 0xFF000000u) | (r_u32(bucket) & 0xFFFFFFu));
                                             w_u32(bucket, (r_u32(bucket) & 0xFF000000u) | (packet & 0xFFFFFFu));
-                                            if (quad) w_u32(packet + 20u, draft_gte_read(14u));
+                                            if (quad)
+                                                w_u32(packet + 20u, draft_gte_read(14u));
                                             packet += quad ? 24u : 20u;
                                         }
                                     }
                                     stream += strides[kind];
                                 }
-                                if (kind == 7u) result = 0u;
+                                if (kind == 7u)
+                                    result = 0u;
                             }
                         }
                     }
@@ -102,8 +110,7 @@ uint32 sub_8001A7A8(uint32 mesh, uint32 red, uint32 green, uint32 blue)
             }
         }
         mesh = r_u32(mesh + 92u);
-    }
-    while (mesh);
+    } while (mesh);
     w_u32(0x80071680u, packet);
     return result;
 }

@@ -2,7 +2,12 @@
 #include <stdlib.h>
 
 #define XPORT_LINK_STUB(symbol, address, image) \
-    uint32 symbol() { FUNCTION_MARKER(address, image); abort(); return 0; }
+    uint32 symbol() \
+    { \
+        FUNCTION_MARKER(address, image); \
+        abort(); \
+        return 0; \
+    }
 
 XPORT_LINK_STUB(sub_800122F4, 0x800122F4u, "SLES_007.30")
 XPORT_LINK_STUB(sub_80014194, 0x80014194u, "SLES_007.30")

@@ -5,16 +5,21 @@
 uint32 sub_8002A560(uint32 position, uint32 yaw, uint32 source, uint32 owner)
 {
     uint32 node = sub_80032EF0(), first, second, words[4], axis;
-    if (!node) return 47u;
+    if (!node)
+        return 47u;
     w_u32(node + 8u, 47u);
     first = sub_8001A3BC();
     second = sub_8001A3BC();
     sub_8001A2FC(28u, first);
     sub_8001A2FC(29u, second);
-    for (axis = 0u; axis < 4u; ++axis) words[axis] = r_u32(position + 4u * axis);
-    for (axis = 0u; axis < 4u; ++axis) w_u32(first + 8u + 4u * axis, words[axis]);
-    for (axis = 0u; axis < 4u; ++axis) words[axis] = r_u32(position + 4u * axis);
-    for (axis = 0u; axis < 4u; ++axis) w_u32(second + 8u + 4u * axis, words[axis]);
+    for (axis = 0u; axis < 4u; ++axis)
+        words[axis] = r_u32(position + 4u * axis);
+    for (axis = 0u; axis < 4u; ++axis)
+        w_u32(first + 8u + 4u * axis, words[axis]);
+    for (axis = 0u; axis < 4u; ++axis)
+        words[axis] = r_u32(position + 4u * axis);
+    for (axis = 0u; axis < 4u; ++axis)
+        w_u32(second + 8u + 4u * axis, words[axis]);
     w_u32(node + 12u, first);
     w_u32(node + 16u, second);
     w_u16(node + 20u, 0u);
@@ -28,7 +33,8 @@ uint32 sub_8002A560(uint32 position, uint32 yaw, uint32 source, uint32 owner)
 uint32 sub_8002A658(uint32 position, uint32 yaw, uint32 flags, uint32 source, uint32 owner)
 {
     uint32 node = sub_80032EF0(), channel, axis;
-    if (!node) return 0u;
+    if (!node)
+        return 0u;
     w_u32(node + 8u, 48u);
     w_u32(node + 12u, position);
     w_u16(node + 56u, 1u);

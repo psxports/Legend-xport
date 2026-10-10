@@ -87,8 +87,7 @@ uint32 sub_80013BAC(void)
     {
         VSync(0);
         ++index;
-    }
-    while ((uint16)index < 250u);
+    } while ((uint16)index < 250u);
     sub_80013894();
     VSync(0);
     PutDispEnv((DISPENV *)psx_addr(0x800BF288u, sizeof(DISPENV)));
@@ -130,8 +129,7 @@ uint32 sub_80014888(uint32 image)
         active = (sint16)r_u16(0x800717A4u);
         result ^= 1u;
         w_u16(0x800715E8u, result);
-    }
-    while (active != 0);
+    } while (active != 0);
     return result;
 }
 
@@ -184,7 +182,6 @@ uint32 sub_8004E308(void)
     {
         destination = r_u32(0x8007166Cu);
         result = sub_8004DA84((uint8 *)position, destination, bytes >> 11);
-    }
-    while (result == 0u);
+    } while (result == 0u);
     return r_u32(0x8007166Cu);
 }

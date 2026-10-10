@@ -13,6 +13,5 @@ uint32 sub_80032854(uint32 mesh, uint32 flags)
     sub_8004EC38(flags >> 4);
     channel = (uint16)sub_800448F4();
     volume = (uint16)sub_80044F58(10000u);
-    return sub_8004486C(1u, channel, (flags & 15u) ? 43u : 1u,
-                         (flags & 15u) ? 800u : 700u, volume, r_u16(0x80071A20u));
+    return sub_8004486C(1u, channel, (flags & 15u) ? 43u : 1u, (flags & 15u) ? 800u : 700u, volume, r_u16(0x80071A20u));
 }

@@ -4,7 +4,11 @@
 #include <string.h>
 
 /* Native staging occupies the area above the game's heap limit */
-enum { LEGEND_CD_STAGING = 0x801FE000u };
+enum
+{
+    LEGEND_CD_STAGING = 0x801FE000u
+};
+
 static uint8 mode_byte;
 static sint32 reading;
 static uint32 pending_bytes;

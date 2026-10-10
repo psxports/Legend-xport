@@ -25,7 +25,6 @@ uint32 sub_800467A0(uint32 position)
         w_u32(position + 4u, r_u32(position + 4u) + transformed[2]);
         sub_80046324(r_u32(position), r_u32(position + 4u), position + 10u);
         descriptor = r_u32(0x80071704u) + 14u * r_u16(position + 10u);
-    }
-    while ((sint32)r_u8(descriptor + 9u) >= (sint16)r_u16(0x800717A0u));
+    } while ((sint32)r_u8(descriptor + 9u) >= (sint16)r_u16(0x800717A0u));
     return 1u;
 }

@@ -349,7 +349,7 @@ uint32 sub_8005A47C(uint32 a1)
     uint32 attempts, rounds;
     for (rounds = 0; rounds < 6u; ++rounds)
     {
-        for (attempts = 0; !CdControl(21, (uint8 *)psx_addr(a1, 1), NULL); ++attempts)
+        for (attempts = 0; !CdControl(21, (uint8 *)legend_native_pointer(a1, sizeof(CdlLOC)), NULL); ++attempts)
             if (attempts + 1u == 5u)
                 return 0;
         if (rounds + 1u == 6u)

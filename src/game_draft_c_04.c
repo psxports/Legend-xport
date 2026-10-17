@@ -5,14 +5,11 @@
 /* Unverified draft C; integration deferred */
 /* TODO: Missing external boundaries require fail-fast during integration */
 extern uint32 sub_800449A0(uint32 channel);
-extern uint32 sub_8002F634(uint32 shade, uint32 radius);
 extern uint32 sub_8004D35C(void);
 extern uint32 sub_80014AE0(void);
 extern uint32 sub_80014B44(void);
 extern uint32 sub_80014878(void);
 extern uint32 sub_80018DEC(void);
-extern uint32 sub_80059C28(void);
-extern uint32 sub_80059C00(void);
 extern uint32 draft_guest_call0(uint32 address);
 extern void draft_guest_call_void(uint32 address);
 extern void nullsub_2(void);
@@ -21,6 +18,88 @@ extern uint32 sub_8005CDA8(uint32 vector, uint32 output);
 extern uint32 sub_8005EEB8(uint32 packet, uint32 enabled, uint32 dither, uint32 page, uint32 window);
 extern uint32 sub_80060DB8(uint32 packet, uint32 sprite);
 extern void draft_gte_control(uint32 index, uint32 value);
+
+uint32 sub_8002F634(uint32 scroll, uint32 intensity)
+{
+    uint32 packet = r_u32(0x80071680);
+    uint32 clut = r_u16(0x800C16C6);
+    uint32 left_u = r_u8(0x800C16C8) + 1, top_v = r_u8(0x800C16CA) + 1;
+    uint32 right_u = left_u + r_u8(0x800C16CC) - 2;
+    uint32 bottom_v = top_v + r_u8(0x800C16CE) - 2;
+    uint32 page = r_u16(0x800C16C4) | r_u16(0x80071786);
+    uint32 angle = r_u16(0x800BBFD4) & 4095, row, column, table, a, b, c, d, order;
+    sint32 pitch, height, yaw, x, y;
+    w_u16(0x80071A48, r_u16(0x80071A48) + scroll);
+    if (angle >= 2049)
+        angle |= 0xF000;
+    pitch = (sint16)angle >> 2;
+    height = pitch - (pitch >> 1);
+    if (height < 0)
+        height = 0;
+    if ((sint16)height >= 65)
+        height = 64;
+    y = height + 32;
+    intensity = (uint16)intensity;
+    for (row = 0; row < 3; ++row)
+    {
+        angle = r_u16(0x800BBFD6) & 4095;
+        if (angle >= 2049)
+            angle |= 0xF000;
+        yaw = (sint16)angle >> 1;
+        x = -(sint32)((r_u16(0x80071A48) + 12 * row + yaw - (yaw >> 1)) & 63);
+        for (column = 0; column < 7; ++column)
+        {
+            w_u8(packet + 3, 12);
+            w_u8(packet + 7, 62);
+            table = 0x800686B4 + 8 * row + column;
+            a = (r_u8(table) * intensity) >> 2;
+            b = (r_u8(table + 1) * intensity) >> 2;
+            c = (r_u8(table + 8) * intensity) >> 2;
+            d = (r_u8(table + 9) * intensity) >> 2;
+            if ((uint16)a || (uint16)b || (uint16)c || (uint16)d)
+            {
+                w_u8(packet + 40, d);
+                w_u8(packet + 41, d);
+                w_u8(packet + 42, d);
+                w_u8(packet + 4, a);
+                w_u8(packet + 5, a);
+                w_u8(packet + 6, a);
+                w_u8(packet + 16, b);
+                w_u8(packet + 17, b);
+                w_u8(packet + 18, b);
+                w_u8(packet + 28, c);
+                w_u8(packet + 29, c);
+                w_u8(packet + 30, c);
+                w_u16(packet + 14, clut);
+                w_u16(packet + 26, page);
+                w_u8(packet + 12, left_u);
+                w_u8(packet + 24, right_u);
+                w_u8(packet + 36, left_u);
+                w_u8(packet + 48, right_u);
+                w_u8(packet + 13, top_v);
+                w_u8(packet + 25, top_v);
+                w_u8(packet + 37, bottom_v);
+                w_u8(packet + 49, bottom_v);
+                w_u16(packet + 8, x);
+                w_u16(packet + 10, y);
+                w_u16(packet + 20, x + 65);
+                w_u16(packet + 22, y);
+                w_u16(packet + 32, x);
+                w_u16(packet + 34, y + 75);
+                w_u16(packet + 44, x + 65);
+                w_u16(packet + 46, y + 75);
+                order = r_u32(0x8007184C) + 32;
+                w_u32(packet, (r_u32(packet) & 0xFF000000) | (r_u32(order) & 0xFFFFFF));
+                w_u32(order, (r_u32(order) & 0xFF000000) | (packet & 0xFFFFFF));
+                packet += 52;
+            }
+            x += 64;
+        }
+        y += 74;
+    }
+    w_u32(0x80071680, packet);
+    return 0;
+}
 
 uint32 sub_8002F98C(void)
 {
@@ -40,9 +119,8 @@ uint32 sub_8002F98C(void)
             w_u16(0x80071678u, (sub_80011B8C() & 3u) + 2u);
             w_u16(0x80071804u, 0);
             w_u16(0x80071A28u, sub_8004496C());
-            /* TODO: IDA-expanded unused sound argument slots need final signature recovery */
-            value = r_u16(0x800718C4u);
-            sub_8004486C(1, r_u16(0x80071A28u), value, 1124, value, value);
+            value = r_u8(0x800718C4u);
+            sub_8004486C(1, r_u16(0x80071A28u), value, 1124, 1, 512);
         }
         if (!r_u16(0x80071678u))
             goto render;
@@ -70,16 +148,16 @@ uint32 sub_8002F98C(void)
         return result;
     channel = r_u16(0x80071A28u);
     value = r_u16(0x80071804u);
-    sub_8004486C(2, channel, 0, 0, value, value);
-    value = r_u16(0x80071804u);
-    sub_8004486C(3, channel, 0, ((4u * value + 2248u) >> 1) & 0xFFFEu, 0, 0);
+    sub_8004486C(2, channel, 0, 0, (uint16)(96 * value), 512);
+    value = (uint32)(sint32)(sint16)r_u16(0x80071804u);
+    sub_8004486C(3, r_u16(0x80071A28u), 0, ((4u * value + 2248u) >> 1) & 0xFFFEu, 0, 0);
 render:
     if (!r_u16(0x80071804u))
         return 1;
     if ((sint16)r_u16(0x80071710u) == 1)
     {
-        value = r_u16(0x80071804u);
-        return sub_8002F634((uint32)((sint16)value / 15), (value - (uint32)((sint32)(value << 16) >> 31)) >> 1);
+        sint32 shade = (sint16)r_u16(0x80071804u);
+        return sub_8002F634((uint32)(sint32)(sint16)(shade / 15), (uint16)(((uint32)shade - (uint32)(shade >> 31)) >> 1));
     }
     return 0x88880000u;
 }
@@ -332,7 +410,6 @@ uint32 sub_8002B9B4(void)
 uint32 sub_80018214(uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 a9, uint32 a10, uint32 a11, uint32 a12)
 {
     uint32 packet = r_u32(0x80071680u), entry = 0x800C0564u + 16u * a4, page, tag, result;
-    /* TODO: IDA duplicates unused parameter slots before a9; finalize the public drawing ABI */
     w_u32(0x80071680u, packet + 40u);
     w_u8(packet + 15u, 4);
     w_u8(packet + 19u, 100);

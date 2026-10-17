@@ -73,29 +73,161 @@ uint32 sub_80014294(void)
     return 1;
 }
 
-uint32 draft_boundary_8004C020(uint32 slot, uint32 *output)
+void sub_8004C7C4(uint32 player)
+{
+    uint32 held = 0x800u, pad = 0x80071790u + 2u * (uint16)player;
+    uint32 keys, first, second, width, half_width, brightness;
+    uint16 state = 0, choice = 0, done = 0;
+    sub_80013B64(1, 0, 0, 32);
+    sub_80045208();
+    sub_80013F80();
+    sub_8004BFE4();
+    do
+    {
+        sub_80011BB8();
+        sub_800139C0();
+        sub_8005E4D0(r_u32(0x8007184Cu), 2500);
+        keys = r_u16(pad);
+        w_u16(pad, keys & ~held);
+        held &= keys;
+        if (state == 0u)
+        {
+            first = r_u32(0x800689D0u);
+            width = sub_8004ED48(first);
+            sub_8004EEFC(192u - (uint32)((sint32)width >> 1), 100, first, 128, 128, 128, 0);
+            if (r_u16(pad) & 0x800u)
+            {
+                done = 1;
+                held = 0x800u;
+                sub_8004BFE4();
+            }
+            else if (r_u16(pad) & 0x100u)
+            {
+                state = 1;
+                held = 0x100u;
+                choice = 0;
+                sub_8004BFE4();
+            }
+        }
+        else if (state == 1u)
+        {
+            brightness = choice == 0u ? 128u : 48u;
+            first = r_u32(0x800689D4u);
+            width = sub_8004ED48(first);
+            second = r_u32(0x800689D8u);
+            width += sub_8004ED48(second) + 32u;
+            half_width = (uint32)((sint32)(width << 16) >> 17);
+            sub_8004EEFC(192u - half_width, 100, first, brightness, 0, 0, 0);
+            brightness = choice == 1u ? 128u : 48u;
+            width = sub_8004ED48(r_u32(0x800689D4u));
+            sub_8004EEFC(width - half_width + 224u, 100, r_u32(0x800689D8u), brightness, 0, 0, 0);
+            if (r_u16(pad) & 0x8000u)
+            {
+                choice = 0;
+                held = 0xFFFFu;
+                sub_8004BFE4();
+            }
+            if (r_u16(pad) & 0x2000u)
+            {
+                choice = 1;
+                held = 0xFFFFu;
+                sub_8004BFE4();
+            }
+            if (r_u16(pad) & 0x40u)
+            {
+                if (choice)
+                {
+                    state = 2;
+                    held = 0xFFFFu;
+                    choice = 1;
+                }
+                else
+                {
+                    done = 1;
+                    held = 0x840u;
+                }
+                sub_8004BFE4();
+            }
+        }
+        else if (state == 2u)
+        {
+            first = r_u32(0x800689DCu);
+            width = sub_8004ED48(first);
+            sub_8004EEFC(192u - (uint32)((sint32)width >> 1), 100, first, 128, 128, 128, 0);
+            first = r_u32(0x800689E0u);
+            width = sub_8004ED48(first);
+            second = r_u32(0x800689E4u);
+            width += sub_8004ED48(second) + 32u;
+            half_width = (uint32)((sint32)(width << 16) >> 17);
+            brightness = choice == 0u ? 128u : 48u;
+            sub_8004EEFC(192u - half_width, 128, first, brightness, 0, 0, 0);
+            brightness = choice == 1u ? 128u : 48u;
+            width = sub_8004ED48(r_u32(0x800689E0u));
+            sub_8004EEFC(width - half_width + 224u, 128, r_u32(0x800689E4u), brightness, 0, 0, 0);
+            if (r_u16(pad) & 0x8000u)
+            {
+                choice = 0;
+                held = 0xFFFFu;
+                sub_8004BFE4();
+            }
+            if (r_u16(pad) & 0x2000u)
+            {
+                choice = 1;
+                held = 0xFFFFu;
+                sub_8004BFE4();
+            }
+            if (r_u16(pad) & 0x40u)
+            {
+                done = 1;
+                held = 0xFFFFu;
+                sub_8004BFE4();
+                if (!choice)
+                    w_u16(0x80071888u, 1);
+            }
+        }
+        sub_80044A5C(5);
+        sub_8005DFE4(0);
+        sub_8005B278(2);
+        sub_80048180();
+        sub_8005E814(r_u32(0x800719D4u));
+        sub_8005E648(r_u32(0x800719CCu));
+        sub_8005E5D8(r_u32(0x8007184Cu) + 9996u);
+        w_u16(0x800719D0u, r_u16(0x800719D0u) + 1u);
+        w_u16(0x800715E8u, r_u16(0x800715E8u) ^ 1u);
+    } while (!done || held);
+    sub_80014294();
+    sub_800452F4();
+    sub_80013B64(1, 0, 0, 0);
+}
+
+uint32 sub_8004C020(uint32 slot, uint32 output)
 {
     uint32 score = 0, i, rank = 0;
     for (i = 0; i < 6u; ++i)
         score = 10u * score - 48u + r_u8(0x800AFFBAu + 288u * (slot & 65535u) + i);
-    *output = score;
+    w_u32(output, score);
     for (i = 0; i < 10u; ++i)
         if ((sint32)r_u32(0x800AF6F8u + 12u * (9u - i)) < (sint32)score)
             rank = 10u - i;
     return rank & 255u;
 }
 
-void draft_boundary_8004C0DC(uint32 slot, uint32 state, uint32 score)
+void sub_8004C0DC(uint32 slot, uint32 state, uint32 score)
 {
-    uint32 rank = (state - 1u) & 255u, held = 0, cursor = 0, done = 0, i, j, entry = 0x800AF6F0u + 12u * rank;
+    uint32 rank = (state - 1u) & 255u, held = 0, cursor = 0, done = 0, i, entry = 0x800AF6F0u + 12u * rank;
     uint32 player = 288u * (slot & 65535u), pad = 0x80071790u + 2u * (slot & 65535u);
     if (rank < 9u)
         for (i = 9u; i > rank; --i)
-            for (j = 0; j < 3u; ++j)
-                w_u32(0x800AF6F0u + 12u * i + 4u * j, r_u32(0x800AF6E4u + 12u * i + 4u * j));
+        {
+            uint32 source = 0x800AF6E4u + 12u * i, destination = source + 12u;
+            uint32 a = r_u32(source), b = r_u32(source + 4u), c = r_u32(source + 8u);
+            w_u32(destination, a);
+            w_u32(destination + 4u, b);
+            w_u32(destination + 8u, c);
+        }
     w_u8(entry, r_u8(0x800AFF94u + player));
     w_u32(entry + 8u, score);
-    w_u8(entry + 1u, r_u16(0x80071594u));
+    w_u8(entry + 1u, r_u8(0x80071594u));
     sub_80013B64(1, 0, 0, 32);
     sub_80045208();
     sub_80013F80();
@@ -458,6 +590,106 @@ uint32 draft_guest_call0(uint32 target)
 
 void draft_guest_call_void(uint32 target)
 {
+    if (r_u32(0x80071588) == 182)
+    {
+        switch (target)
+        {
+            case 0x800C9F14:
+                legend_stage16_begin();
+                return;
+            case 0x800CA050:
+                legend_stage17_begin();
+                return;
+            case 0x800CA2B8:
+                legend_stage18_begin();
+                return;
+            case 0x800CA614:
+                legend_stage19_begin();
+                return;
+            case 0x800CA968:
+                legend_stage20_begin();
+                return;
+            case 0x800CAAF0:
+                legend_stage21_begin();
+                return;
+        }
+    }
+    if (r_u32(0x80071588) == 174)
+    {
+        switch (target)
+        {
+            case 0x800C9EDC:
+                legend_stage12_begin();
+                return;
+            case 0x800CA010:
+                legend_stage13_begin();
+                return;
+            case 0x800CA2B8:
+                legend_stage14_begin();
+                return;
+            case 0x800CA5F8:
+                legend_stage15_begin();
+                return;
+        }
+    }
+    if (r_u32(0x80071588) == 168)
+    {
+        switch (target)
+        {
+            case 0x800C9F90:
+                legend_stage8_begin();
+                return;
+            case 0x800CA220:
+                legend_stage9_begin();
+                return;
+            case 0x800CA3AC:
+                legend_stage10_begin();
+                return;
+            case 0x800CA750:
+                legend_stage11_begin();
+                return;
+        }
+    }
+    if (r_u32(0x80071588) == 162 && target == 0x800CB038)
+    {
+        legend_gallery_run();
+        return;
+    }
+    if (r_u32(0x80071588) == 160 && target == 0x800CA35C)
+    {
+        legend_stage5_begin();
+        return;
+    }
+    if (r_u32(0x80071588) == 160 && target == 0x800CA5B8)
+    {
+        legend_stage6_begin();
+        return;
+    }
+    if (r_u32(0x80071588) == 160 && target == 0x800CA180)
+    {
+        legend_stage4_begin();
+        return;
+    }
+    if (r_u32(0x80071588) == 160 && target == 0x800CA0B4)
+    {
+        legend_stage4_tick();
+        return;
+    }
+    if (r_u32(0x80071588) == 160 && target == 0x800C9EC0)
+    {
+        legend_stage3_begin();
+        return;
+    }
+    if (r_u32(0x80071588u) == 154u && target == 0x800CA078u)
+    {
+        legend_stage1_begin();
+        return;
+    }
+    if (r_u32(0x80071588u) == 154u && target == 0x800CA254u)
+    {
+        legend_stage2_begin();
+        return;
+    }
     if (target == 0x800CB02Cu && r_u32(0x80071588u) == 11u)
     {
         sub_800CB02C();

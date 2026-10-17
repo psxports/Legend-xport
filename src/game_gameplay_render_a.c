@@ -29,7 +29,7 @@ static void render_a_compose(uint32 source, uint32 destination)
     }
 }
 
-uint32 sub_8001C4B8(uint32 mesh)
+static uint32 render_a_mesh(uint32 mesh, uint32 *cleanup_hint)
 {
     static const uint8 record_sizes[8] = {12, 16, 20, 28, 24, 28, 24, 28};
     static const uint8 packet_sizes[8] = {20, 24, 28, 36, 32, 40, 32, 40};
@@ -58,6 +58,8 @@ uint32 sub_8001C4B8(uint32 mesh)
         w_u32(0x1F80002Cu, r_u32(mesh + 12) - r_u32(0x800BBFC8u));
         w_u32(0x1F800030u, r_u32(mesh + 16) - r_u32(0x800BBFCCu));
         result = sub_8005CC48(0x800BBFDCu, 0x1F800028u, mesh + 64);
+        if (cleanup_hint)
+            *cleanup_hint = mesh + 64;
         if (geometry && visible)
         {
             uint32 depth = r_u32(mesh + 72), radius = r_u32(geometry + 16);
@@ -172,6 +174,8 @@ uint32 sub_8001C4B8(uint32 mesh)
                                     result = (uint16)(count - n - 1u);
                                 }
                             }
+                            if (cleanup_hint)
+                                *cleanup_hint = records;
                         }
                     }
                 }
@@ -181,4 +185,15 @@ uint32 sub_8001C4B8(uint32 mesh)
     } while (mesh);
     w_u32(0x80071680u, packet);
     return result;
+}
+
+uint32 sub_8001C4B8(uint32 mesh)
+{
+    return render_a_mesh(mesh, 0);
+}
+
+uint32 legend_render_mesh_for_region_check(uint32 mesh, uint32 *cleanup_hint)
+{
+    /* The original caller uses the outgoing model cursor when no player is active */
+    return render_a_mesh(mesh, cleanup_hint);
 }

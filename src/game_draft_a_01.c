@@ -200,7 +200,7 @@ uint32 sub_80011D78(uint32 a1, uint32 a2)
     FUNCTION_MARKER(0x80011D78u, "SLES_007.30");
     uint32 data = r_u32(0x800715ACu);
     uint32 pixels = data + 32u * r_u16(data) + ((a1 & 0xFFFFu) << 9) + 4u;
-    LoadImagePSX((PSX_RECT *)psx_addr(a2, 8u), (uint32 *)psx_addr(pixels, 1u));
+    LoadImagePSX((PSX_RECT *)legend_native_pointer(a2, 8u), (uint32 *)legend_native_pointer(pixels, 1u));
     return DrawSync(0);
 }
 
@@ -449,8 +449,6 @@ uint32 sub_8001ED84(uint32 a1)
 }
 
 /* TODO: External game and SDK dependencies await fail-fast adapters */
-extern uint32 draft_boundary_8004C020(uint32 slot, uint32 *argument);
-extern uint32 draft_boundary_8004C0DC(uint32 slot, uint32 state, uint32 argument);
 extern uint32 draft_boundary_80066C88(uint32 *data, uint32 *header);
 
 uint32 sub_80044800(void)
@@ -528,10 +526,9 @@ uint32 sub_8004C720(void)
         uint32 slot = (uint16)index;
         if (r_u8(0x80071768u + slot) == 1u)
         {
-            /* TODO: Resolve the local output argument ABI during integration */
-            uint32 result = draft_boundary_8004C020(slot, &argument) & 0xFFu;
+            uint32 result = sub_8004C020(slot, draft_local_address(&argument, sizeof(argument))) & 0xFFu;
             if (result != 0u)
-                draft_boundary_8004C0DC(slot, result, argument);
+                sub_8004C0DC(slot, result, argument);
             w_u8(0x80071768u + slot, 2u);
         }
         ++index;

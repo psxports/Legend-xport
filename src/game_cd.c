@@ -12,6 +12,7 @@ enum
 static uint8 mode_byte;
 static sint32 reading;
 static uint32 pending_bytes;
+static uint32 next_sector;
 extern sint32 CdControlBPSX(uint8 command, uint8 *parameter, uint8 *result);
 extern sint32 CD_getsector(uint32 destination, uint32 words);
 
@@ -26,6 +27,8 @@ uint32 legend_cd_set_debug(uint32 level)
 sint32 legend_cd_control(uint8 command, uint8 *parameter, uint8 *result)
 {
     sint32 ok = CdControlBPSX(command, parameter, result);
+    if (ok && parameter && (command == 2 || command == 6 || command == 21 || command == 22 || command == 27))
+        next_sector = (uint32)CdPosToInt((CdlLOC *)parameter);
     if (ok && command == 14u && parameter)
         mode_byte = parameter[0];
     if (command == 2u || command == 6u || command == 27u || command == 9u || command == 8u)
@@ -50,8 +53,15 @@ sint32 legend_cd_ready(sint32 mode, uint8 *result)
     else if (reading)
     {
         uint32 bytes = (mode_byte & 0x20u) ? 2340u : 2048u;
-        if (!pending_bytes && CD_getsector(LEGEND_CD_STAGING, bytes / 4u))
-            pending_bytes = bytes;
+        if (!pending_bytes)
+        {
+            /* Polling reads retain their position independently of XA playback */
+            if (cd_read_sector_fifo_native(next_sector, mode_byte) && CD_getsector(LEGEND_CD_STAGING, bytes / 4u))
+            {
+                ++next_sector;
+                pending_bytes = bytes;
+            }
+        }
         status = pending_bytes ? CdlDataReady : CdlDiskError;
     }
     if (result)

@@ -2,6 +2,108 @@
 #include "xport.h"
 #include "game_draft_signatures.h"
 
+uint32 sub_800399C0(uint32 node)
+{
+    uint32 mesh = r_u32(node + 12), collision, timer, velocity, floor, region, i;
+    uint32 distances[8], z;
+    sub_80051F74(mesh + 8, draft_local_address(distances, sizeof(distances)));
+    sub_80044CC0(r_u32(mesh + 8), r_u32(mesh + 16));
+    sub_80044DC8(r_u32(mesh + 8), r_u32(mesh + 16));
+    collision = r_u32(node + 16);
+    if (r_u32(collision + 128))
+    {
+        if (!r_u16(collision + 144))
+        {
+            if (r_u16(node + 100) & 0x4000)
+            {
+                sub_8003278C(700);
+                sub_80028EA0(mesh + 8, 3, 6, 1);
+            }
+            goto destroy;
+        }
+        velocity = r_u32(node + 108);
+        w_u16(node + 24, 100);
+        w_u16(node + 98, 1);
+        z = r_u32(node + 116);
+        w_u32(node + 108, (uint32)((sint32)(0 - velocity) / 2));
+        w_u32(node + 116, (uint32)((sint32)(0 - z) / 2));
+    }
+    timer = r_u16(node + 124);
+    if (timer != 0xFFFF)
+    {
+        w_u16(node + 124, timer - 1);
+        if (!timer)
+        {
+            if (r_u16(node + 100) & 0x4000)
+            {
+                sub_8003278C(700);
+                sub_80028EA0(mesh + 8, 3, 6, 1);
+            }
+            goto destroy;
+        }
+    }
+    w_u32(mesh + 8, r_u32(mesh + 8) + r_u32(node + 108));
+    z = r_u32(mesh + 16);
+    w_u32(mesh + 12, r_u32(mesh + 12) + r_u32(node + 112));
+    z += r_u32(node + 116);
+    w_u32(mesh + 16, z);
+    floor = sub_80046324(r_u32(mesh + 8), z, node + 96);
+    w_u32(node + 92, floor);
+    sub_800325CC(node + 20, mesh + 8, floor, 1);
+    if (r_u16(node + 26))
+    {
+        if (r_u16(node + 126) & 4)
+        {
+            sub_8004EC38(8);
+            w_u16(0x8007158C, 64);
+            w_u16(0x80071A50, 4);
+            sub_8003278C(700);
+            sub_80028EA0(mesh + 8, 3, 7, 0);
+            for (i = 0; i < 3; ++i)
+                sub_8002837C(mesh + 8, 36, sub_80011B8C() & 4095, 1, 0, 50);
+            sub_80029C98(mesh + 8, 2000, r_u8(node + 100) | 0xC000, 4, 20, 0, 0);
+        }
+        else
+        {
+            w_u32(0x1F800028, 0);
+            w_u32(0x1F80002C, 5);
+            w_u32(0x1F800030, 0);
+            sub_80022CC0(mesh + 8, 0x1F800028, 2, 4);
+        }
+        goto destroy;
+    }
+    region = r_u16(node + 96);
+    if (region != 0xFFFF && sub_80046A28(r_u32(0x80071704) + 14 * region, region, mesh + 8))
+    {
+        if (r_u16(node + 124) == 0xFFFF)
+            w_u16(node + 124, 4);
+    }
+    sub_8005178C(mesh + 8, 500, mesh + 24, r_u16(node + 96), node + 28);
+    if (r_u16(node + 98))
+        w_u32(r_u32(node + 16) + 128, 0);
+    else
+    {
+        w_u32(r_u32(node + 16) + 132, r_u16(node + 100));
+        w_u16(r_u32(node + 16) + 136, r_u16(node + 104));
+        w_u16(r_u32(node + 16) + 148, r_u16(node + 102));
+        sub_800475A8(r_u32(node + 16));
+    }
+    sub_80032A20(node + 28);
+    sub_80046278(r_u16(node + 96));
+    if (!(r_u16(node + 100) & 0x4000))
+        return sub_8001C4B8(mesh);
+    sub_8001A7A8(mesh, 255, (r_u16(0x800719D0) & 1) ? 0 : 128, 0);
+    sub_8002B178(mesh + 8, 256, 128, 0);
+    w_u32(0x1F800028, 0);
+    w_u32(0x1F80002C, 0);
+    w_u32(0x1F800030, 0);
+    return sub_80022CC0(mesh + 8, 0x1F800028, 2, 4);
+
+destroy:
+    sub_80039984(node);
+    return sub_80032FD0(node);
+}
+
 static void projectile_copy_vector(uint32 dst, uint32 src)
 {
     uint32 x = r_u32(src), y = r_u32(src + 4), z = r_u32(src + 8), pad = r_u32(src + 12);
@@ -9,6 +111,113 @@ static void projectile_copy_vector(uint32 dst, uint32 src)
     w_u32(dst + 4, y);
     w_u32(dst + 8, z);
     w_u32(dst + 12, pad);
+}
+
+void sub_8003A9BC(uint32 node)
+{
+    uint32 root = r_u32(node + 12), mesh = r_u32(node + 16), floor_height, pitch, yaw, volume, collision, i, random, heading, shadow_height;
+    sub_80044CC0(r_u32(root + 8), r_u32(root + 16));
+    sub_80044DC8(r_u32(root + 8), r_u32(root + 16));
+    if (r_s16(node + 30))
+    {
+        sub_800449A0(r_u16(node + 114));
+        sub_8003278C(700);
+        for (i = 0; i < 3; ++i)
+        {
+            random = sub_80011B8C();
+            heading = (uint32)(sint32)r_s16(root + 26) + (random & 1023) - 2560;
+            sub_8002837C(root + 8, 36, heading, 1, 0, 50);
+        }
+        sub_800376A8(node);
+        sub_80032FD0(node);
+        return;
+    }
+    floor_height = sub_80046324(r_u32(root + 8), r_u32(root + 16), node + 108);
+    w_u32(node + 104, floor_height);
+    sub_800325CC(node + 24, root + 8, floor_height, 1);
+    pitch = r_u16(mesh + 24);
+    yaw = r_u16(mesh + 26);
+    w_u16(mesh + 24, (pitch - 128) & 4095);
+    w_u16(mesh + 26, (yaw + 32) & 4095);
+    if (!(r_u16(0x800719D0) & 7))
+    {
+        w_u32(0x1F800028, 0);
+        w_u32(0x1F80002C, (uint32)-20);
+        w_u32(0x1F800030, 0);
+        sub_80022CC0(root + 8, 0x1F800028, 3, 7);
+        sub_8004EC38(4);
+        volume = (uint16)sub_80044F58(16000);
+        sub_8004486C(1, r_u16(node + 114), 23, 500, volume, r_u16(0x80071A20));
+    }
+    sub_8005178C(root + 8, 1500, root + 24, r_u16(node + 108), node + 32);
+    collision = r_u32(node + 20);
+    w_u32(collision + 132, 0x8008);
+    heading = r_u16(root + 26) + ((r_u16(0x800719D0) & 1) << 10) - 512;
+    collision = r_u32(node + 20);
+    w_u16(collision + 136, heading & 4095);
+    collision = r_u32(node + 20);
+    w_u16(collision + 148, 80);
+    sub_800475A8(r_u32(node + 20));
+    sub_80032A20(node + 32);
+    floor_height = r_u32(node + 104);
+    shadow_height = (uint32)((sint32)(r_u32(root + 12) - floor_height) >> 1) + floor_height;
+    sub_80021288(r_u32(root + 8), r_u32(root + 16), floor_height, shadow_height, 0);
+    sub_8004E520(root + 8, 1);
+    sub_80046278(r_u16(node + 108));
+    sub_8001DEB0(root);
+}
+
+uint32 sub_8003E6BC(uint32 node)
+{
+    uint32 root = r_u32(node + 12), mesh = r_u32(node + 16), floor_height, pitch, yaw, volume, collision, i, random, heading, shadow_height;
+    sub_80044CC0(r_u32(root + 8), r_u32(root + 16));
+    sub_80044DC8(r_u32(root + 8), r_u32(root + 16));
+    if (r_s16(node + 34))
+    {
+        sub_800449A0(r_u16(node + 118));
+        sub_8003278C(700);
+        for (i = 0; i < 3; ++i)
+        {
+            random = sub_80011B8C();
+            heading = (uint32)(sint32)r_s16(root + 26) + (random & 1023) - 2560;
+            sub_8002837C(root + 8, 36, heading, 1, 0, 50);
+        }
+        sub_8003E668(node);
+        return sub_80032FD0(node);
+    }
+    floor_height = sub_80046324(r_u32(root + 8), r_u32(root + 16), node + 112);
+    w_u32(node + 108, floor_height);
+    sub_800325CC(node + 28, root + 8, floor_height, 1);
+    pitch = r_u16(mesh + 24);
+    yaw = r_u16(mesh + 26);
+    w_u16(mesh + 24, (pitch - 128) & 4095);
+    w_u16(mesh + 26, (yaw + 32) & 4095);
+    if (!(r_u16(0x800719D0) & 7))
+    {
+        w_u32(0x1F800028, 0);
+        w_u32(0x1F80002C, (uint32)-20);
+        w_u32(0x1F800030, 0);
+        sub_80022CC0(root + 8, 0x1F800028, 3, 7);
+        sub_8004EC38(4);
+        volume = (uint16)sub_80044F58(16000);
+        sub_8004486C(1, r_u16(node + 118), 23, 500, volume, r_u16(0x80071A20));
+    }
+    sub_8005178C(root + 8, 1500, root + 24, r_u16(node + 112), node + 36);
+    collision = r_u32(node + 24);
+    w_u32(collision + 132, 0x8008);
+    heading = r_u16(root + 26) + ((r_u16(0x800719D0) & 1) << 10) - 512;
+    collision = r_u32(node + 24);
+    w_u16(collision + 136, heading & 4095);
+    collision = r_u32(node + 24);
+    w_u16(collision + 148, 80);
+    sub_800475A8(r_u32(node + 24));
+    sub_80032A20(node + 36);
+    floor_height = r_u32(node + 108);
+    shadow_height = (uint32)((sint32)(r_u32(root + 12) - floor_height) >> 1) + floor_height;
+    sub_80021288(r_u32(root + 8), r_u32(root + 16), floor_height, shadow_height, 0);
+    sub_8004E520(root + 8, 1);
+    sub_80046278(r_u16(node + 112));
+    return sub_8001C4B8(root);
 }
 
 uint32 sub_80029A18(uint32 model, uint32 owner)

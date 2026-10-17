@@ -3,6 +3,7 @@
 #include "game_boot.h"
 #include "game_native_adapters.h"
 #include "psx_spu.h"
+#include "psx_gpu.h"
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,6 +28,8 @@ sint32 legend_boot(void)
     uint32 sector = 0u;
     sint32 track;
     const SpuMallocGuestBinding heap_binding = {0x8006FE6Cu, 0x8006FE74u, 0x8006FEA4u, 0x8006FEA8u, 0x8006FEACu, 0x8006FDDCu, 0x8006FDE0u};
+    /* Legend requires every framebuffer update */
+    gpu_set_frame_skip(0);
     if (!length || length >= sizeof(directory))
         return 0;
     slash = strrchr(directory, '\\');

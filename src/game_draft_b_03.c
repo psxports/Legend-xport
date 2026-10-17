@@ -4,16 +4,27 @@
 #include <stdlib.h>
 /* Unverified draft; integration deferred */
 /* TODO: Missing SDK boundaries remain declarations for later fail-fast integration */
-extern uint32 sub_800122F4(uint32 input, uint32 output, uint32 count);
 extern uint32 sub_8005D138(uint32 angles, uint32 matrix);
 extern uint32 sub_8005CF68(uint32 matrix);
 extern uint32 sub_8005CDA8(uint32 input, uint32 output);
 extern void sub_8005CAC8(uint32 far_color, uint32 distance);
 extern uint32 sub_8004A9E8(void);
-extern uint32 sub_8004B164(void);
 extern uint32 sub_80062368(uint32 attributes);
 extern uint32 sub_800628B8(uint32 attributes);
 extern uint32 sub_800621A8(uint32 enabled, uint32 voices);
+
+void sub_800122F4(uint32 input, uint32 output, uint32 count)
+{
+    count = (uint16)count;
+    while (count)
+    {
+        uint32 value = r_u16(input);
+        input += 2;
+        --count;
+        w_u16(output, value);
+        output += 2;
+    }
+}
 
 uint32 sub_80011DDC(uint32 a1, uint32 a2, uint32 a3)
 {

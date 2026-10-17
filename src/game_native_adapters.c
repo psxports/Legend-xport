@@ -77,6 +77,9 @@ static sint32 native_read(void *user, uint32 address, uint32 width, uint32 *valu
     if (width != 1u && width != 2u && width != 4u)
         adapter_failure("Invalid MMIO width", "read", width);
     memory = borrowed_pointer(address, width);
+    /* The registered MMIO span also covers the canonical scratchpad */
+    if (address >= 0x1F800000u && address < 0x1F800400u)
+        memory = psx_addr(address, width);
     if (memory)
     {
         *value = 0;
@@ -99,6 +102,8 @@ static sint32 native_write(void *user, uint32 address, uint32 width, uint32 valu
     if (width != 1u && width != 2u && width != 4u)
         adapter_failure("Invalid MMIO width", "write", width);
     memory = borrowed_pointer(address, width);
+    if (address >= 0x1F800000u && address < 0x1F800400u)
+        memory = psx_addr(address, width);
     if (memory)
     {
         for (i = 0; i < width; ++i)

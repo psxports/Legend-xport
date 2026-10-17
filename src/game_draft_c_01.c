@@ -5,7 +5,6 @@
 /* Unverified draft C; integration deferred */
 /* TODO: Missing external boundaries require fail-fast during integration */
 extern void draft_gte_control(uint32 index, uint32 value);
-extern uint32 sub_8003160C(uint32 index);
 extern uint32 sub_80021F28(void);
 extern uint32 sub_80067FC8(uint32 stream, uint32 data, uint32 table);
 extern uint32 sub_80066B98(uint32 stream);
@@ -332,6 +331,13 @@ uint32 sub_8004496C(void)
     uint32 index = (uint16)sub_800448F4();
     w_u8(0x800AEEB0u + index, 1);
     return index;
+}
+
+uint32 sub_800449A0(uint32 channel)
+{
+    w_u8(0x800AEEB0u + (uint16)channel, 0);
+    /* Original leaves the return carrier unspecified */
+    return 0;
 }
 
 void sub_8002046C(uint32 a1, uint32 a2, uint32 a3)

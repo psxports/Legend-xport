@@ -11,19 +11,15 @@ extern uint32 sub_80022B24();
 extern uint32 sub_80022CC0();
 extern uint32 sub_80023500();
 extern uint32 sub_80029DD4();
-extern uint32 sub_8002AFE8();
 extern uint32 sub_80031224();
 extern uint32 sub_80031308();
 extern uint32 sub_8003133C();
 extern uint32 sub_80032FD0();
 
-extern uint32 sub_80040D64();
-extern uint32 sub_800410B8();
 extern uint32 sub_800449A0();
 extern uint32 sub_80044F58();
 extern uint32 sub_800467A0();
 extern uint32 sub_8004EB88();
-extern uint32 sub_80050A08();
 extern uint32 sub_80051550();
 extern uint32 sub_800516E8();
 extern uint32 sub_80052078();
@@ -1062,139 +1058,75 @@ uint32 sub_80015364(uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 a9, uint3
     return result;
 }
 
-uint32 sub_80032A20(uint32 a1)
+uint32 sub_80032A20(uint32 corners)
 {
-    FUNCTION_MARKER(0x80032A20u, "SLES_007.30");
-    /* TODO: Resolve remaining signed wrapping, local aggregate layout and caller argument gaps during integration */
-    uint32 gte_t4, gte_t5, gte_t6, gte_v0, gte_v1;
-
-    sint32 v1;
-    uint32 v2;
-    sint32 v3;
-    sint32 v4;
-    uint8 v5;
-    sint32 result;
-    uint32 v7;
-    sint32 v8;
-    sint32 v17;
-    sint8 v18;
-    sint16 v21;
-    sint16 v22;
-    uint32 v23;
-    sint32 v24;
-    uint32 v25;
-    sint32 v26;
-    sint8 v28;
-    sint8 v29;
-    sint8 v30;
-    sint32 v31;
-
-    v1 = 0;
-    v2 = a1 + 2;
-    while (1)
+    SVECTOR vertices[4] = {0};
+    uint32 i, x, absolute, z, packed_xy[4], packet, depth, entry, result;
+    for (i = 0; i < 4; ++i)
     {
-        v3 = r_u32((uint32)(a1)) - r_u32((uint32)(0x800BBFC4u));
-        v4 = v3;
-        if (v3 < 0)
-            v4 = r_u32((uint32)(0x800BBFC4u)) - r_u32((uint32)(a1));
-        v5 = v4 >= 16001;
-        result = (uint16)v1;
-        if (v5)
-            break;
-        v7 = draft_local_address(&v26, sizeof(v26)) + 2 * (uint16)v1;
-        w_u16((uint32)(v7), v3);
-        w_u16((uint32)((v7 + 2u * (1))), r_u16((uint32)((v2 - 2u * (2)))) - r_u32((uint32)(0x800BBFC8u)));
-        v8 = r_u32((uint32)(v2)) - r_u32((uint32)(0x800BBFCCu));
-        result = v8 < 128;
-        if (v8 < 128)
-            break;
-        result = r_u32((uint32)(v2)) - r_u32((uint32)(0x800BBFCCu)) < 16001;
-        v2 += 4u * (4);
-        if (!result)
-            break;
-        w_u16((uint32)((v7 + 2u * (2))), v8);
-        ++v1;
-        a1 += 4u * (4);
-        if ((uint16)v1 >= 4u)
-        {
-            gte_t4 = r_u32((uint32)(0x800BBFDCu));
-            gte_t5 = r_u32((uint32)(0x800BBFE0u));
-            /* TODO: GTE adapters and reconstructed operand addresses await integration */
-            draft_gte_control(0u, gte_t4);
-            draft_gte_control(1u, gte_t5);
-            gte_t4 = r_u32((uint32)(0x800BBFE4u));
-            gte_t5 = r_u32((uint32)(0x800BBFE8u));
-            gte_t6 = r_u32((uint32)(0x800BBFECu));
-            /* TODO: GTE adapters and reconstructed operand addresses await integration */
-            draft_gte_control(2u, gte_t4);
-            draft_gte_control(3u, gte_t5);
-            draft_gte_control(4u, gte_t6);
-            gte_t4 = 0;
-            /* TODO: GTE adapters and reconstructed operand addresses await integration */
-            draft_gte_control(5u, gte_t4);
-            draft_gte_control(6u, gte_t4);
-            draft_gte_control(7u, gte_t4);
-            gte_v1 = draft_local_address(&v28, sizeof(v28));
-            gte_v0 = draft_local_address(&v30, sizeof(v30));
-            /* TODO: GTE adapters and reconstructed operand addresses await integration */
-            /* TODO: Recover GTE local operand lwc2    $0, 0x28+var_28($sp) */
-            /* TODO: Recover GTE local operand lwc2    $1, 0x28+var_24($sp) */
-            draft_gte_data(2u, r_u32(gte_v1 + 0u));
-            draft_gte_data(3u, r_u32(gte_v1 + 4u));
-            draft_gte_data(4u, r_u32(gte_v0 + 0u));
-            draft_gte_data(5u, r_u32(gte_v0 + 4u));
-            draft_gte_command(0x280030u);
-            v17 = r_u32((uint32)(0x80071680u));
-            w_u8((uint32)((r_u32((uint32)(0x80071680u)) + 3)), 9);
-            w_u8((uint32)((v17 + 7)), 44);
-            w_u8((uint32)((v17 + 12)), r_u32((uint32)(0x800C0F08u)));
-            w_u8((uint32)((v17 + 13)), r_u8((uint32)(0x800C0F0Au)));
-            w_u8((uint32)((v17 + 20)), r_u32((uint32)(0x800C0F08u)) + r_u8((uint32)(0x800C0F0Cu)) - 1);
-            w_u8((uint32)((v17 + 21)), r_u8((uint32)(0x800C0F0Au)));
-            w_u8((uint32)((v17 + 28)), r_u32((uint32)(0x800C0F08u)));
-            w_u8((uint32)((v17 + 29)), r_u8((uint32)(0x800C0F0Au)) + r_u8((uint32)(0x800C0F0Eu)) - 1);
-            v18 = r_u8((uint32)((v17 + 7))) | 2;
-            w_u8((uint32)((v17 + 36)), r_u32((uint32)(0x800C0F08u)) + r_u8((uint32)(0x800C0F0Cu)) - 1);
-            gte_v0 = (uint8)(r_u8((uint32)(0x800C0F0Eu)));
-            gte_v1 = (uint8)(r_u8((uint32)(0x800C0F0Au)));
-            w_u8((uint32)((v17 + 7)), v18 & 0xFE);
-            w_u8((uint32)((v17 + 37)), (uint8)gte_v1 + (uint8)gte_v0 - 1);
-            /* TODO: GTE adapters and reconstructed operand addresses await integration */
-            draft_gte_command(0x158002Du);
-            gte_t4 = draft_gte_read(7u);
-            v31 = gte_t4 >> 2;
-            result = (uint32)((gte_t4 >> 2) - 16) < 0x9B4;
-            if ((uint32)((gte_t4 >> 2) - 16) < 0x9B4)
-            {
-                /* TODO: GTE adapters and reconstructed operand addresses await integration */
-                w_u32(v17 + 8u, draft_gte_read(12u));
-                w_u32(v17 + 0x10u, draft_gte_read(13u));
-                w_u32(v17 + 0x18u, draft_gte_read(14u));
-                gte_v0 = draft_local_address(&v29, sizeof(v29));
-                /* TODO: GTE adapters and reconstructed operand addresses await integration */
-                draft_gte_data(0u, r_u32(gte_v0 + 0u));
-                draft_gte_data(1u, r_u32(gte_v0 + 4u));
-                draft_gte_command(0x180001u);
-                w_u16((uint32)((v17 + 14)), r_u16((uint32)(0x800C0F06u)));
-                v21 = r_u16((uint32)(0x800C0F04u));
-                v22 = r_u16((uint32)(0x80071784u));
-                w_u8((uint32)((v17 + 4)), 64);
-                w_u8((uint32)((v17 + 5)), 64);
-                w_u8((uint32)((v17 + 6)), 64);
-                w_u16((uint32)((v17 + 22)), v21 | v22);
-                /* TODO: GTE adapters and reconstructed operand addresses await integration */
-                w_u32(gte_v0 + 0u, draft_gte_read(14u));
-                v23 = (uint32)(4 * v31 + r_u32((uint32)(0x8007184Cu)));
-                v24 = r_u32((uint32)(0x80071680u));
-                w_u32((uint32)(v17), r_u32((uint32)(v17)) & 0xFF000000 | r_u32((uint32)(v23)) & 0xFFFFFF);
-                result = v24 + 40;
-                v25 = r_u32((uint32)(v23)) & 0xFF000000 | v17 & 0xFFFFFF;
-                w_u32((uint32)(0x80071680u), result);
-                w_u32((uint32)(v23), v25);
-            }
-            return result;
-        }
+        x = r_u32(corners) - r_u32(0x800BBFC4);
+        absolute = (sint32)x < 0 ? 0 - x : x;
+        if ((sint32)absolute >= 16001)
+            return i;
+        vertices[i].vx = (sint16)x;
+        vertices[i].vy = (sint16)(r_u16(corners + 4) - r_u16(0x800BBFC8));
+        z = r_u32(corners + 8) - r_u32(0x800BBFCC);
+        if ((sint32)z < 128)
+            return 1;
+        absolute = (sint32)z < 0 ? 0 - z : z;
+        if ((sint32)absolute >= 16001)
+            return 0;
+        vertices[i].vz = (sint16)z;
+        corners += 16;
     }
+    for (i = 0; i < 5; ++i)
+        draft_gte_control(i, r_u32(0x800BBFDC + 4 * i));
+    draft_gte_control(5, 0);
+    draft_gte_control(6, 0);
+    draft_gte_control(7, 0);
+    draft_gte_data(0, (uint16)vertices[0].vx | ((uint32)(uint16)vertices[0].vy << 16));
+    draft_gte_data(1, (uint16)vertices[0].vz);
+    draft_gte_data(2, (uint16)vertices[1].vx | ((uint32)(uint16)vertices[1].vy << 16));
+    draft_gte_data(3, (uint16)vertices[1].vz);
+    draft_gte_data(4, (uint16)vertices[3].vx | ((uint32)(uint16)vertices[3].vy << 16));
+    draft_gte_data(5, (uint16)vertices[3].vz);
+    draft_gte_command(0x280030);
+    packet = r_u32(0x80071680);
+    w_u8(packet + 3, 9);
+    w_u8(packet + 7, 44);
+    w_u8(packet + 12, r_u8(0x800C0F08));
+    w_u8(packet + 13, r_u8(0x800C0F0A));
+    w_u8(packet + 20, r_u8(0x800C0F08) + r_u8(0x800C0F0C) - 1);
+    w_u8(packet + 21, r_u8(0x800C0F0A));
+    w_u8(packet + 28, r_u8(0x800C0F08));
+    w_u8(packet + 29, r_u8(0x800C0F0A) + r_u8(0x800C0F0E) - 1);
+    w_u8(packet + 36, r_u8(0x800C0F08) + r_u8(0x800C0F0C) - 1);
+    w_u8(packet + 7, (r_u8(packet + 7) | 2) & 0xFE);
+    w_u8(packet + 37, r_u8(0x800C0F0A) + r_u8(0x800C0F0E) - 1);
+    draft_gte_command(0x158002D);
+    depth = (uint32)((sint32)draft_gte_read(7) >> 2);
+    if (depth - 16 >= 0x9B4)
+        return 0;
+    packed_xy[0] = draft_gte_read(12);
+    packed_xy[1] = draft_gte_read(13);
+    packed_xy[3] = draft_gte_read(14);
+    w_u32(packet + 8, packed_xy[0]);
+    w_u32(packet + 16, packed_xy[1]);
+    w_u32(packet + 24, packed_xy[3]);
+    draft_gte_data(0, (uint16)vertices[2].vx | ((uint32)(uint16)vertices[2].vy << 16));
+    draft_gte_data(1, (uint16)vertices[2].vz);
+    draft_gte_command(0x180001);
+    w_u16(packet + 14, r_u16(0x800C0F06));
+    w_u8(packet + 4, 64);
+    w_u8(packet + 5, 64);
+    w_u8(packet + 6, 64);
+    w_u16(packet + 22, r_u16(0x800C0F04) | r_u16(0x80071784));
+    w_u32(packet + 32, draft_gte_read(14));
+    entry = r_u32(0x8007184C) + 4 * depth;
+    w_u32(packet, (r_u32(packet) & 0xFF000000) | (r_u32(entry) & 0xFFFFFF));
+    result = r_u32(0x80071680) + 40;
+    w_u32(0x80071680, result);
+    w_u32(entry, (r_u32(entry) & 0xFF000000) | (packet & 0xFFFFFF));
     return result;
 }
 
@@ -1644,7 +1576,6 @@ uint32 sub_80014F0C(uint32 file, uint32 slot, uint32 maximum)
 uint32 sub_8003681C(uint32 a1)
 {
     FUNCTION_MARKER(0x8003681Cu, "SLES_007.30");
-    /* TODO: Resolve remaining signed wrapping, local aggregate layout and caller argument gaps during integration */
 
     sint32 v2;
     sint32 result;
@@ -1666,7 +1597,7 @@ uint32 sub_8003681C(uint32 a1)
         v6 = 8;
         if (v4 < v5)
         {
-            v7 = (v5 - v4) << 16;
+            v7 = (sint32)((uint32)(v5 - v4) << 16);
             if ((sint16)((uint32)(v7) >> 16) >= 9)
                 v7 = 0x80000;
             v6 = 8 - (v7 >> 16);
@@ -1676,7 +1607,7 @@ uint32 sub_8003681C(uint32 a1)
         if (v8 < v4)
         {
             v10 = v9 < 9;
-            v11 = v9 << 16;
+            v11 = (sint32)((uint32)v9 << 16);
             if (!v10)
                 v11 = 0x80000;
             v6 = 8 - (v11 >> 16);
@@ -1688,12 +1619,12 @@ uint32 sub_8003681C(uint32 a1)
             {
                 if (v6)
                 {
-                    return sub_8004486C(2, r_u16((uint32)((v2 + 6))), 0, 0, draft_unknown_argument("sub_8004486C", 5u), draft_unknown_argument("sub_8004486C", 6u));
+                    return sub_8004486C(2, r_u16((uint32)((v2 + 6))), 0, 0, ((uint32)v6 * r_u16((uint32)(v2 + 12)) >> 3) & 0xFFFFu, 512u);
                 }
                 else
                 {
                     sub_800449A0(r_u16((uint32)((v2 + 6))));
-                    sub_8004486C(4, r_u16((uint32)((v2 + 6))), 0, 0, draft_unknown_argument("sub_8004486C", 5u), draft_unknown_argument("sub_8004486C", 6u));
+                    sub_8004486C(4, r_u16((uint32)((v2 + 6))), 0, 0, 0, 0);
                     result = r_u16((uint32)((v2 + 2))) & 0x400;
                     w_u16((uint32)((v2 + 4)), 0);
                     if (result)
@@ -1704,7 +1635,7 @@ uint32 sub_8003681C(uint32 a1)
         else if (v6)
         {
             w_u16((uint32)((v2 + 6)), sub_8004496C());
-            sub_8004486C(1, r_u16((uint32)((v2 + 6))), r_u16((uint32)((v2 + 8))), r_u16((uint32)((v2 + 10))), draft_unknown_argument("sub_8004486C", 5u), draft_unknown_argument("sub_8004486C", 6u));
+            sub_8004486C(1, r_u16((uint32)((v2 + 6))), r_u16((uint32)((v2 + 8))), r_u16((uint32)((v2 + 10))), 1u, 512u);
             result = 1;
             w_u16((uint32)((v2 + 4)), 1);
         }

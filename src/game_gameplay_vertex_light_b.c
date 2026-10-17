@@ -41,3 +41,31 @@ uint32 sub_8002BB88(uint32 color, uint32 first, uint32 second, uint32 third)
         w_u8(color + axis, (uint16)channels[axis] >= 256u ? 255u : channels[axis]);
     return result;
 }
+
+void sub_8001B69C(void)
+{
+    uint32 column;
+    sint32 red, green, blue;
+    for (column = 0; column < 3; ++column)
+    {
+        red = (sint16)(r_u16(0x80071858) + 160);
+        green = (sint16)(r_u16(0x8007185A) + 160);
+        blue = (sint16)(r_u16(0x8007185C) + 160);
+        if (red < 0)
+            red = 0;
+        if (green < 0)
+            green = 0;
+        if (blue < 0)
+            blue = 0;
+        if (red >= 256)
+            red = 255;
+        if (green >= 256)
+            green = 255;
+        if (blue >= 256)
+            blue = 255;
+        w_u16(0x800B7164 + 2 * column, 4 * red);
+        w_u16(0x800B716A + 2 * column, 4 * green);
+        w_u16(0x800B7170 + 2 * column, 4 * blue);
+    }
+    sub_8005CF98(0x800B7164);
+}

@@ -147,7 +147,7 @@ uint32 sub_80018DAC(void)
 uint32 sub_80011D3C(uint32 a1, uint32 a2)
 {
     uint32 pixels = r_u32(0x800715ACu) + 32u * (uint16)a1 + 4u;
-    LoadImagePSX((PSX_RECT *)psx_addr(a2, sizeof(PSX_RECT)), (uint32 *)psx_addr(pixels, 1u));
+    LoadImagePSX((PSX_RECT *)legend_native_pointer(a2, sizeof(PSX_RECT)), (uint32 *)legend_native_pointer(pixels, 1u));
     return (uint32)DrawSync(0);
 }
 
@@ -262,7 +262,6 @@ extern uint32 draft_unknown_return(const char *owner);
 extern void draft_gte_control(uint32 index, uint32 value);
 extern uint32 sub_8005CBB8(uint32 value);
 extern uint32 sub_80032FD0(uint32 item);
-extern uint32 sub_8001B69C(void);
 extern uint32 sub_80068444(uint32 callback);
 extern uint32 sub_8006841C(uint32 callback);
 extern void sub_800CA294(uint32 first, uint32 second);

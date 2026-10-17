@@ -242,6 +242,12 @@ void sub_8005CF68(uint32 ignored_matrix)
     SetRotMatrix(sdk_pointer(0x1F800000u, sizeof(MATRIX)));
 }
 
+uint32 sub_8005CE28(uint32 matrix, uint32 vector)
+{
+    ScaleMatrix(sdk_pointer(matrix, sizeof(MATRIX)), sdk_pointer(vector, sizeof(VECTOR)));
+    return matrix;
+}
+
 void sub_8005D0D8(uint32 x, uint32 y)
 {
     ReadGeomOffset(sdk_pointer(x, sizeof(sint32)), sdk_pointer(y, sizeof(sint32)));

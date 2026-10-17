@@ -292,7 +292,7 @@ uint32 sub_80044528(uint32 a1, uint32 a2, uint32 a3)
             {
                 w_u32(0u - 2146767144u + 4u * (uint16)a2, allocation);
                 sub_800623F8(allocation);
-                SpuWrite(psx_addr(source, size), size);
+                sub_80062398(source, size, 0);
                 while (!sub_80062488(0u))
                 {
                 }

@@ -4,19 +4,10 @@
 
 /* Unverified draft C; integration deferred */
 /* TODO: Missing external boundaries require fail-fast during integration */
-extern uint32 sub_80023244();
 extern uint32 sub_8002372C();
 extern uint32 sub_80023D1C();
-extern uint32 sub_8002823C();
-extern uint32 sub_80028480();
-extern uint32 sub_800287AC();
 extern uint32 sub_80014230();
 extern uint32 sub_80014194();
-extern uint32 sub_80026B78();
-extern uint32 sub_800294B4();
-extern uint32 sub_8002A908();
-extern uint32 sub_8002AA44();
-extern uint32 sub_800236DC();
 extern uint32 sub_8005D138();
 extern uint32 sub_8005CC48();
 extern uint32 sub_8005CDD8();
@@ -492,7 +483,6 @@ uint32 sub_800215EC(void)
 /* TODO: Overlay and SDK boundaries require fail-fast integration */
 extern uint32 draft_guest_call0(uint32 address);
 extern void draft_guest_call_void(uint32 address);
-extern void sub_800571F0(void), sub_8003F5E0(void), sub_8004BC4C(void);
 extern uint32 sub_8005C154(uint32 command);
 
 extern void sub_8005B278(uint32), sub_8005E4D0(uint32, uint32), sub_800485D0(uint32), sub_8004848C(uint32), sub_8005DFE4(uint32), sub_8005E814(uint32), sub_8005E648(uint32), sub_8005E5D8(uint32), sub_8004C7C4(uint32);

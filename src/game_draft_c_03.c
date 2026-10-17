@@ -4,10 +4,6 @@
 
 /* Unverified draft C; integration deferred */
 /* TODO: Missing external boundaries require fail-fast during integration */
-extern uint32 sub_800203EC(uint32 x, uint32 angle, uint32 z, uint32 other);
-extern uint32 sub_80020414(uint32 a, uint32 b, uint32 c, uint32 d);
-extern uint32 sub_8002030C(uint32 target);
-extern uint32 sub_8002095C(uint32 value, uint32 target);
 extern uint32 sub_8005CBB8(uint32 squared);
 extern uint32 sub_8005D138(uint32 vector, uint32 matrix);
 extern uint32 sub_8005CDD8(uint32 matrix, uint32 vector, uint32 result);

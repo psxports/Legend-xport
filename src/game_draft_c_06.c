@@ -5,54 +5,10 @@
 /* Unverified draft C; integration deferred */
 /* TODO: Missing external boundaries require fail-fast during integration */
 extern uint32 sub_80033308();
-extern uint32 sub_80033700();
 extern uint32 sub_800347A4();
-extern uint32 sub_80034D48();
-extern uint32 sub_800357B8();
 extern uint32 sub_80034B4C();
 extern uint32 sub_800360E8();
-extern uint32 sub_80036DB4();
-extern uint32 sub_800376F0();
-extern uint32 sub_80037B80();
-extern uint32 sub_80037E0C();
-extern uint32 sub_800384B8();
-extern uint32 sub_80038718();
-extern uint32 sub_80038760();
 extern uint32 sub_80038B08(uint32 node);
-extern uint32 sub_80038E20();
-extern uint32 sub_800395B8();
-extern uint32 sub_800398F0();
-extern uint32 sub_800399C0();
-extern uint32 sub_80035AB4();
-extern uint32 sub_80038BC4();
-extern uint32 sub_80039E24();
-extern uint32 sub_800353C8();
-extern uint32 sub_80039F40();
-extern uint32 sub_8003A194();
-extern uint32 sub_8003A4D8();
-extern uint32 sub_8003A684();
-extern uint32 sub_8003A9BC();
-extern uint32 sub_8003AC24();
-extern uint32 sub_8003AEE4();
-extern uint32 sub_8003AF78();
-extern uint32 sub_8003B4BC();
-extern uint32 sub_8003B900();
-extern uint32 sub_8003BA20();
-extern uint32 sub_8003C070();
-extern uint32 sub_8003C434();
-extern uint32 sub_8003C7F4();
-extern uint32 sub_8003CB64();
-extern uint32 sub_8003D16C();
-extern uint32 sub_8003CFF0();
-extern uint32 sub_8003D660();
-extern uint32 sub_8003E2E8();
-extern uint32 sub_8003E6BC();
-extern uint32 sub_8003E924();
-extern uint32 sub_8003B198();
-extern uint32 sub_800369DC();
-extern uint32 sub_8003D688();
-extern uint32 sub_8003EA78();
-extern uint32 sub_8003EC18();
 extern uint32 sub_80032854();
 extern uint32 sub_8003FB58();
 extern uint32 sub_8003FB00();
@@ -247,7 +203,7 @@ uint32 sub_8003F008(void)
                 sub_800395B8(node);
                 break;
             case 30:
-                sub_800398F0();
+                sub_800398F0(node);
                 break;
             case 31:
                 sub_800399C0(node);
@@ -256,7 +212,7 @@ uint32 sub_8003F008(void)
                 sub_80035AB4(node);
                 break;
             case 33:
-                sub_80038BC4();
+                sub_80038BC4(node);
                 break;
             case 34:
                 sub_80036AC8(node);
@@ -295,7 +251,7 @@ uint32 sub_8003F008(void)
                 sub_8003B4BC(node);
                 break;
             case 46:
-                sub_8003B900();
+                sub_8003B900(node);
                 break;
             case 47:
                 sub_8003BA20(node);

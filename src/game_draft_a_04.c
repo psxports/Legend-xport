@@ -8,20 +8,15 @@
 /* TODO: Missing SDK and external adapters require fail-fast during integration */
 extern uint32 sub_80022B24();
 extern uint32 sub_80022CC0();
-extern uint32 sub_80023500();
 extern uint32 sub_80029DD4();
-extern uint32 sub_8002AFE8();
 extern uint32 sub_80031224();
 extern uint32 sub_80031308();
 extern uint32 sub_8003133C();
 extern uint32 sub_80032FD0();
 
-extern uint32 sub_80040D64();
-extern uint32 sub_800410B8();
 extern uint32 sub_800449A0();
 extern uint32 sub_80044F58();
 extern uint32 sub_8004EB88();
-extern uint32 sub_80050A08();
 extern uint32 sub_80051550();
 extern uint32 sub_800516E8();
 extern uint32 sub_80052078();
@@ -51,74 +46,45 @@ extern uint32 sub_80065768();
 extern uint32 sub_80067A6C();
 extern uint32 sub_80067AE8();
 
-uint32 sub_80034890(uint32 a1)
+uint32 sub_80034890(uint32 node)
 {
-    FUNCTION_MARKER(0x80034890u, "SLES_007.30");
-    /* TODO: Resolve remaining signed wrapping, local aggregate layout and caller argument gaps during integration */
-
-    sint32 result;
-    uint32 v2;
-    uint32 v3;
-    sint32 v4;
-    sint32 v5;
-    sint32 v6;
-    sint32 v7;
-    uint32 v8;
-    uint32 v9;
-    uint32 v10;
-    sint32 v11;
-    uint32 v12;
-
-    result = r_u16((uint32)(0x80071808u));
-    v2 = (uint32)(a1 + 12);
-    if (!r_u16((uint32)(0x80071808u)))
+    uint32 result = (uint32)(sint32)(sint16)r_u16(0x80071808), coordinate = 8000, low, high, sample;
+    sint32 center, lower, upper, sum, step;
+    if (!result)
         return result;
-    result = (sint16)r_u16((uint32)((a1 + 16))) < 10;
-    if ((sint16)r_u16((uint32)((a1 + 16))) >= 10)
-        return result;
-    v3 = 8000;
-    if (r_u8((uint32)(0x800AFFB0u)))
+    if ((sint16)r_u16(node + 16) >= 10)
+        return 0;
+    if (r_u8(0x800AFFB0))
     {
-        v3 = r_u16((uint32)(0x800AFFCCu));
-        if (r_u8((uint32)(0x800B00D0u)))
-            v3 = (r_u16((uint32)(0x800AFFCCu)) + r_u16((uint32)(0x800B00ECu)) + ((uint32)(r_u16((uint32)(0x800AFFCCu)) + r_u16((uint32)(0x800B00ECu))) >> 31)) >> 1;
-        goto LABEL_8;
-    }
-    v4 = 524288000;
-    if (r_u8((uint32)(0x800B00D0u)))
-    {
-        v3 = r_u16((uint32)(0x800B00ECu));
-    LABEL_8:
-        v4 = v3 << 16;
-    }
-    v5 = v4 >> 16;
-    result = 8000;
-    if (v5 != 8000)
-    {
-        v6 = r_u16((uint32)(v2));
-        result = v5 < v6;
-        if (v5 >= v6)
+        coordinate = r_u16(0x800AFFCC);
+        if (r_u8(0x800B00D0))
         {
-            v7 = r_u16((uint32)(v2 + 2u * (1)));
-            result = v7 < v5;
-            if (v7 >= v5)
-            {
-                v8 = v3 - 8;
-                if ((sint16)(v3 - 8) < v6)
-                    v8 = r_u16((uint32)(v2));
-                v9 = v3 + 8;
-                if (v7 < (sint16)(v3 + 8))
-                    v9 = r_u16((uint32)(v2 + 2u * (1)));
-                v10 = v8 + (sub_80011B8C() & 0x7F) * (sint16)(v9 - v8) / 128;
-                v11 = (sint16)v9 < (sint16)v10;
-                v12 = v10 << 16;
-                if (v11)
-                    v12 = v9 << 16;
-                return sub_80023500((uint16)((uint32)(v12) >> 16), v2 + 2);
-            }
+            sum = (sint16)coordinate + (sint16)r_u16(0x800B00EC);
+            coordinate = ((uint32)sum + ((uint32)sum >> 31)) >> 1;
         }
     }
-    return result;
+    else if (r_u8(0x800B00D0))
+        coordinate = r_u16(0x800B00EC);
+    center = (sint16)coordinate;
+    if (center == 8000)
+        return 8000;
+    lower = (sint16)r_u16(node + 12);
+    if (center < lower)
+        return 1;
+    upper = (sint16)r_u16(node + 14);
+    if (upper < center)
+        return 1;
+    low = coordinate - 8;
+    if ((sint16)low < lower)
+        low = (uint32)lower;
+    high = coordinate + 8;
+    if (upper < (sint16)high)
+        high = (uint32)upper;
+    step = (sint32)(sub_80011B8C() & 127) * (sint16)(high - low) / 128;
+    sample = low + (uint32)step;
+    if ((sint16)high < (sint16)sample)
+        sample = high;
+    return sub_80023500((uint32)(sint32)(sint16)sample, node + 16);
 }
 
 uint32 sub_8004F06C(uint32 a1, uint32 a2)
@@ -226,49 +192,36 @@ uint32 sub_8004BD40(void)
     return result;
 }
 
-uint32 sub_8004EEFC(uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 a9, uint32 a10, uint32 a11)
+uint32 sub_8004EEFC(uint32 x, uint32 y, uint32 text, uint32 red, uint32 green, uint32 blue, uint32 depth)
 {
-    FUNCTION_MARKER(0x8004EEFCu, "SLES_007.30");
-    /* TODO: Resolve remaining signed wrapping, local aggregate layout and caller argument gaps during integration */
-
-    sint32 v12;
-    uint32 v13;
-    sint32 v15;
-    uint16 v16;
-    uint32 result;
-
-    v12 = (uint8)r_u8((uint32)(a3));
-    v13 = a3 + 1;
-    if (r_u8((uint32)(a3)))
+    uint32 character = r_u8(text++), texture, result = 0;
+    /* Empty text emits no packets and its return is unused by callers */
+    while (character)
     {
-        v15 = a4;
-        do
-        {
-            v16 = -1;
-            if ((uint32)(v12 - 65) < 0x1A)
-                v16 = v12 + 4;
-            if ((uint16)v12 == 35)
-                v16 = 95;
-            if ((uint16)v12 == 46)
-                v16 = 96;
-            if ((uint16)v12 == 58)
-                v16 = 97;
-            if ((uint16)v12 == 44)
-                v16 = 96;
-            if ((uint16)v12 == 33)
-                v16 = 112;
-            if ((uint16)v12 == 63)
-                v16 = 113;
-            if ((uint16)v12 == 45)
-                v16 = 111;
-            if ((uint32)(v12 - 48) < 0xA)
-                v16 = v12 + 51;
-            result = a9 << 16;
-            if (v16 != 0xFFFF)
-                result = sub_80018214(a1, a2, 1, v16, v15, (sint16)a9, a10, a11);
-            a1 += 16;
-            v12 = r_u8((uint32)((v13 += 1u, v13 - 1u)));
-        } while (v12);
+        texture = 0xFFFF;
+        if (character - 65 < 26)
+            texture = character + 4;
+        if (character == 35)
+            texture = 95;
+        if (character == 46)
+            texture = 96;
+        if (character == 58)
+            texture = 97;
+        if (character == 44)
+            texture = 96;
+        if (character == 33)
+            texture = 112;
+        if (character == 63)
+            texture = 113;
+        if (character == 45)
+            texture = 111;
+        if (character - 48 < 10)
+            texture = character + 51;
+        result = (uint32)(uint16)green << 16;
+        if ((uint16)texture != 0xFFFF)
+            result = sub_80018214((uint32)(sint32)(sint16)x, (uint32)(sint32)(sint16)y, 1, (uint16)texture, (uint32)(sint32)(sint16)red, (uint32)(sint32)(sint16)green, (uint32)(sint32)(sint16)blue, (uint16)depth);
+        x += 16;
+        character = r_u8(text++);
     }
     return result;
 }
@@ -600,53 +553,30 @@ uint32 sub_80012FBC(void)
     return result;
 }
 
-uint32 sub_800468F0(uint32 a1)
+uint32 sub_800468F0(uint32 position)
 {
-    FUNCTION_MARKER(0x800468F0u, "SLES_007.30");
-    /* TODO: Resolve remaining signed wrapping, local aggregate layout and caller argument gaps during integration */
-    uint32 gte_t4, gte_t5, gte_t6;
-
-    sint32 v2;
-    sint16 v3;
-    sint32 v9;
-    sint32 v10;
-    sint32 v11;
-    sint32 result;
-    sint32 v13[4];
-
+    uint32 region, angle, i, delta[4], result;
     do
     {
-        v2 = r_u16((uint32)((a1 + 10)));
-        w_u32((uint32)(0x1F800020u), 0);
-        v3 = r_u16((uint32)((14 * v2 + r_u32((uint32)(0x80071704u)) + 12)));
-        w_u16((uint32)((a1 + 8)), v3);
-        w_u16((uint32)(0x1F800022u), v3);
-        w_u16((uint32)(0x1F800024u), 0);
-        sub_8005D138(528482336, 528482304);
-        gte_t4 = r_u32((uint32)(0x1F800000u));
-        gte_t5 = r_u32((uint32)(0x1F800004u));
-        /* TODO: GTE adapters and reconstructed operand addresses await integration */
-        draft_gte_control(0u, gte_t4);
-        draft_gte_control(1u, gte_t5);
-        gte_t4 = r_u32((uint32)(0x1F800008u));
-        gte_t5 = r_u32((uint32)(0x1F80000Cu));
-        gte_t6 = r_u32((uint32)(0x1F800010u));
-        /* TODO: GTE adapters and reconstructed operand addresses await integration */
-        draft_gte_control(2u, gte_t4);
-        draft_gte_control(3u, gte_t5);
-        draft_gte_control(4u, gte_t6);
-        w_u32((uint32)(0x1F800020u), 0);
-        w_u16((uint32)(0x1F800022u), 0);
-        w_u16((uint32)(0x1F800024u), 32);
-        sub_8005CDA8(528482336, draft_local_address(v13, sizeof(v13)));
-        v9 = r_u32((uint32)((a1 + 4)));
-        w_u32((uint32)(a1), r_u32((uint32)(a1)) + (v13[0]));
-        v10 = r_u32((uint32)(a1));
-        v11 = v9 + v13[2];
-        w_u32((uint32)((a1 + 4)), v11);
-        sub_80046324(v10, v11, (uint32)(a1 + 10));
-        result = (uint32)r_u8((uint32)((14 * r_u16((uint32)((a1 + 10))) + r_u32((uint32)(0x80071704u)) + 8))) - 1 < 2;
-    } while ((uint32)r_u8((uint32)((14 * r_u16((uint32)((a1 + 10))) + r_u32((uint32)(0x80071704u)) + 8))) - 1 < 2);
+        region = r_u16(position + 10);
+        w_u16(0x1F800020, 0);
+        angle = r_u16(r_u32(0x80071704) + 14 * region + 12);
+        w_u16(position + 8, angle);
+        w_u16(0x1F800022, angle);
+        w_u16(0x1F800024, 0);
+        sub_8005D138(0x1F800020, 0x1F800000);
+        for (i = 0; i < 5; ++i)
+            draft_gte_control(i, r_u32(0x1F800000 + 4 * i));
+        w_u16(0x1F800020, 0);
+        w_u16(0x1F800022, 0);
+        w_u16(0x1F800024, 32);
+        sub_8005CDA8(0x1F800020, draft_local_address(delta, sizeof(delta)));
+        w_u32(position, r_u32(position) + delta[0]);
+        w_u32(position + 4, r_u32(position + 4) + delta[2]);
+        sub_80046324(r_u32(position), r_u32(position + 4), position + 10);
+        region = r_u16(position + 10);
+        result = (uint32)(r_u8(r_u32(0x80071704) + 14 * region + 8) - 1) < 2;
+    } while (result);
     return result;
 }
 

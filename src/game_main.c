@@ -1,4 +1,5 @@
 #include "psx.h"
+#include "psx_spu.h"
 #include "xport.h"
 #include "game_boot.h"
 #include "game_timer.h"
@@ -22,7 +23,6 @@ void xport_missing_sn_constructors(void);
 uint32 InitPAD(uint32 buffer0, uint32 size0, uint32 buffer1, uint32 size1);
 uint32 StartPAD(void);
 uint32 ChangeClearPAD(uint32 mode);
-uint32 SpuInitMalloc(uint32 count, uint32 table);
 uint32 _SpuInit(uint32 mode);
 
 void sub_80014E3C(void)
@@ -241,7 +241,7 @@ uint32 sub_80045450(void)
     uint32 count;
     FUNCTION_MARKER(0x80045450u, "SLES_007.30");
     sub_80060DF8();
-    SpuInitMalloc(80u, 0x800AF3D4u);
+    SpuInitMalloc(80, (char *)psx_addr(0x800AF3D4u, 81u * 8u));
     w_u32(0x80071590u, 128u);
     w_u32(0x8007179Cu, 128u);
     w_u32(0x800717ECu, 122u);
